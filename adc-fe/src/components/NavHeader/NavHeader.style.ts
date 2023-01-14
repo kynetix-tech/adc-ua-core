@@ -1,9 +1,13 @@
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import { styled } from '@mui/system';
+import Container from '@mui/material/Container';
+import styled from 'styled-components';
 
-export const NavToolbar = styled(Toolbar)`
-  background-color: #000000;
+export const NavContainer = styled(Container).attrs({
+  maxWidth: false,
+})`
+  max-width: 95vw;
+  padding-left: 0;
+  padding-right: 0;
 `;
 
 export const FlexBox = styled(Box)`

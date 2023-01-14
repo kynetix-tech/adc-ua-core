@@ -1,12 +1,14 @@
-import Container from '@mui/material/Container';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import React from 'react';
 
-import { FlexBox, NavToolbar } from './NavHeader.style';
+import { FlexBox, NavContainer, NavToolbar } from './NavHeader.style';
 
 export default function NavHeader() {
   return (
-    <FlexBox>
-      <Container></Container>
-    </FlexBox>
+    <NavContainer>
+      <FlexBox>
+        <DirectionsCarIcon />
+      </FlexBox>
+    </NavContainer>
   );
 }

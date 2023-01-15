@@ -24,8 +24,7 @@ export const NavAppBar = styled(AppBar).attrs({
   position: 'static',
   elevation: 0,
 })`
-  background-color: transparent !important;
-  border-radius: 1rem;
+  background-color: rgba(211, 219, 238, 0.2) !important;
 `;
 
 export const NavLogoBox = styled(Box).attrs({

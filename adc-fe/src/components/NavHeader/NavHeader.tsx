@@ -1,3 +1,7 @@
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ViewCompactIcon from '@mui/icons-material/ViewCompact';
+import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
 
@@ -11,15 +15,28 @@ import {
 
 export default function NavHeader() {
   return (
-    <NavContainer>
-      <FlexBox>
-        <NavAppBar>
-          <Toolbar>
-            <NavLogoBox />
-            <NavLogoText>ADC.UA</NavLogoText>
-          </Toolbar>
-        </NavAppBar>
-      </FlexBox>
-    </NavContainer>
+    <NavAppBar>
+      <Toolbar>
+        <NavContainer>
+          <FlexBox>
+            <FlexBox>
+              <NavLogoBox />
+              <NavLogoText>ADC.UA</NavLogoText>
+            </FlexBox>
+            <FlexBox>
+              <IconButton>
+                <ViewCompactIcon />
+              </IconButton>
+              <IconButton>
+                <AddCircleOutlineIcon />
+              </IconButton>
+              <IconButton>
+                <AccountCircleIcon />
+              </IconButton>
+            </FlexBox>
+          </FlexBox>
+        </NavContainer>
+      </Toolbar>
+    </NavAppBar>
   );
 }

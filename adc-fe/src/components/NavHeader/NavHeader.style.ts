@@ -9,7 +9,7 @@ import Logo from '../../assets/logos/adc-ua-logo.png';
 export const NavContainer = styled(Container).attrs({
   maxWidth: false,
 })`
-  max-width: 95vw;
+  max-width: 92vw;
   padding-left: 0;
   padding-right: 0;
 `;

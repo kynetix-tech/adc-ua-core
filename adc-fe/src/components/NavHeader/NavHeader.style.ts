@@ -38,5 +38,5 @@ export const NavLogoBox = styled(Box).attrs({
 export const NavLogoText = styled(Typography).attrs({
   variant: 'h5',
 })`
-  color: #111111;
+  color: ${({ theme }) => theme.palette.text.primary};
 `;

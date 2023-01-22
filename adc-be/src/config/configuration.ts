@@ -1,5 +1,23 @@
 export const configuration = () => ({
   port: 8080,
+  db: {
+    type: 'postgres',
+    host: process.env.POSTGRES_HOST || '127.0.0.1',
+    port: 5432,
+    database: process.env.POSTGRES_DB || 'adc-ua-db',
+    username: process.env.POSTGRES_USER || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || 'postgres',
+    synchronize: false,
+    entities: ['dist/entity//*.{ts,js}'],
+    ormEntities: ['src/entity//*.ts'],
+    migrations: ['src/migration//*.ts'],
+    subscribers: ['src/subscriber//*.ts'],
+    cli: {
+      entitiesDir: 'src/entity',
+      migrationsDir: 'src/migration',
+      subscribersDir: 'src/subscriber',
+    },
+  },
   swagger: {
     openapi: '3.0.0',
     title: 'adc-ua API',

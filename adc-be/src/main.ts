@@ -33,7 +33,7 @@ async function bootstrap() {
       swagger.contact.url,
       swagger.contact.email,
     )
-    .addBearerAuth(swagger.authorization)
+    .addBearerAuth(swagger.authorization, 'authorization')
     .build();
 
   const options: SwaggerDocumentOptions = {
@@ -46,7 +46,7 @@ async function bootstrap() {
   const port = configService.get<number>('port');
   await app.listen(port);
 
-  logger.log(`Application is running on: ${await app.getUrl()}`);
+  logger.log(`Application is running on: ${await app.getUrl()}/api`);
 }
 
 bootstrap();

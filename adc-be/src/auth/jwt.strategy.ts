@@ -30,14 +30,12 @@ export class JwtStrategy extends PassportStrategy(BaseStrategy) {
     const minimumScope = ['offline_access'];
 
     const scopes = payload?.scope.split(' ');
-    console.log(scopes);
-    console.log(minimumScope.every((scope) => scopes.includes(scope)));
     if (scopes && !minimumScope.every((scope) => scopes.includes(scope))) {
       throw new UnauthorizedException(
         'JWT does not possess the required scope',
       );
     }
 
-    return payload;
+    return {};
   }
 }

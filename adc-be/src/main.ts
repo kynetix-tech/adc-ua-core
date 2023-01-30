@@ -2,10 +2,6 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import {
   DocumentBuilder,
   OpenAPIObject,
   SwaggerDocumentOptions,
@@ -16,10 +12,7 @@ import { AppModule } from './module/app.module';
 
 async function bootstrap() {
   const logger = new Logger(bootstrap.name);
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-  );
+  const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
 
@@ -44,7 +37,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   const port = configService.get<number>('port');
-  await app.listen(port);
+  const host = configService.get<string>('host');
+  await app.listen(port, host);
 
   logger.log(`Application is running on: ${await app.getUrl()}/api`);
 }

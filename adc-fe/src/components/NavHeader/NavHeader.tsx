@@ -31,7 +31,6 @@ export default function NavHeader() {
                 <IconButton>
                   <ViewCompactIcon />
                 </IconButton>
-
                 <IconButton>
                   <AddCircleOutlineIcon />
                 </IconButton>

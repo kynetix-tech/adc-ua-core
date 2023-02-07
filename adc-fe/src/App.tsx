@@ -5,7 +5,7 @@ import {
 } from '@mui/material/styles';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
-import Login from './pages/Login';
+import { AppRouter } from './App.router';
 import theme from './themes';
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
               scope: 'offline_access',
             }}
           >
-            <Login />
+            <AppRouter />
           </Auth0Provider>
         </MuiThemeProvider>
       </StyledEngineProvider>

@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 
 import NavHeader from '../../components/NavHeader';

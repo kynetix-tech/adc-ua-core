@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ViewCompactIcon from '@mui/icons-material/ViewCompact';
@@ -14,6 +15,8 @@ import {
 } from './NavHeader.style';
 
 export default function NavHeader() {
+  const { isAuthenticated } = useAuth0();
+
   return (
     <NavAppBar>
       <Toolbar>
@@ -23,17 +26,20 @@ export default function NavHeader() {
               <NavLogoBox />
               <NavLogoText>ADC.UA</NavLogoText>
             </FlexBox>
-            <FlexBox>
-              <IconButton>
-                <ViewCompactIcon />
-              </IconButton>
-              <IconButton>
-                <AddCircleOutlineIcon />
-              </IconButton>
-              <IconButton>
-                <AccountCircleIcon />
-              </IconButton>
-            </FlexBox>
+            {isAuthenticated && (
+              <FlexBox>
+                <IconButton>
+                  <ViewCompactIcon />
+                </IconButton>
+
+                <IconButton>
+                  <AddCircleOutlineIcon />
+                </IconButton>
+                <IconButton>
+                  <AccountCircleIcon />
+                </IconButton>
+              </FlexBox>
+            )}
           </FlexBox>
         </NavContainer>
       </Toolbar>

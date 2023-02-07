@@ -1,10 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import Typography from '@mui/material/Typography';
 import React from 'react';
 
-import NavHeader from '../../components/NavHeader';
-
-export default function Login() {
+export default function IntroLogin() {
   const { loginWithRedirect, logout, isAuthenticated, getAccessTokenSilently } =
     useAuth0();
 
@@ -16,7 +13,6 @@ export default function Login() {
 
   return (
     <>
-      <NavHeader></NavHeader>
       <button onClick={() => loginWithRedirect()}>Log In</button>
       <button
         onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}

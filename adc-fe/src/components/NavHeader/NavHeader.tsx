@@ -18,7 +18,7 @@ export default function NavHeader() {
   const { isAuthenticated } = useAuth0();
 
   return (
-    <NavAppBar>
+    <NavAppBar isAuthenticated={isAuthenticated}>
       <Toolbar>
         <NavContainer>
           <FlexBox>

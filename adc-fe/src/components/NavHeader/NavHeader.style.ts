@@ -20,11 +20,16 @@ export const FlexBox = styled(Box)`
   align-items: center;
 `;
 
+export interface NavAppBarProps {
+  isAuthenticated: boolean;
+}
+
 export const NavAppBar = styled(AppBar).attrs({
   position: 'static',
   elevation: 0,
-})`
-  background-color: rgba(211, 219, 238, 0.2) !important;
+})<NavAppBarProps>`
+  background-color: ${(props) =>
+    props.isAuthenticated ? 'rgba(211, 219, 238, 0.2)' : 'transparent'} !important;
 `;
 
 export const NavLogoBox = styled(Box).attrs({

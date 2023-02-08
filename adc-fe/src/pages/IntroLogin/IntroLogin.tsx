@@ -1,6 +1,8 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
 
+import { AnimatedText } from '../../components/AnimatedText';
+
 export default function IntroLogin() {
   const { loginWithRedirect, logout, isAuthenticated, getAccessTokenSilently } =
     useAuth0();
@@ -13,6 +15,7 @@ export default function IntroLogin() {
 
   return (
     <>
+      <AnimatedText>ADC.UA</AnimatedText>
       <button onClick={() => loginWithRedirect()}>Log In</button>
       <button
         onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}

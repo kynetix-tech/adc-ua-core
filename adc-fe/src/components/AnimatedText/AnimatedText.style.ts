@@ -14,7 +14,7 @@ const JumpKeyframes = keyframes`
 export const AnimatedTextContainer = styled.div`
   position: relative;
   -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(0, 0, 0, 0.2));
-  font-size: 4.25rem;
+  font-size: 6.25rem;
   letter-spacing: 0.5rem;
 `;
 
@@ -24,7 +24,7 @@ export interface AnimatedLetterProps {
 
 export const AnimatedLetter = styled.span<AnimatedLetterProps>`
   --i: ${(props) => `${props.idx}`};
-  font-weight: ${theme.typography.fontWeightBold};
+  font-weight: ${theme.typography.fontWeightMedium};
   position: relative;
   display: inline-block;
   color: ${theme.palette.text.primary};

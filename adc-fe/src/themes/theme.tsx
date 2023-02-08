@@ -10,7 +10,7 @@ const themeOptions: ThemeOptions = {
   },
   palette: {
     primary: { main: '#177bc2', contrastText: '#ffffff' },
-    secondary: { main: '#3449a1', contrastText: '#ffffff' },
+    secondary: { main: '#182356', contrastText: '#ffffff' },
     background: { default: '#d6dae1', paper: '#ffffff' },
     text: { primary: '#0c1321', secondary: '#68758B' },
     action: { active: '#6b778c' },

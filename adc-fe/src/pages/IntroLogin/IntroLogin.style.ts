@@ -16,6 +16,7 @@ export const LoginButton = styled(Button).attrs({
   variant: 'contained',
 })`
   margin-top: 2rem;
+  border-radius: 1.5rem;
   background-color: ${({ theme }) => theme.palette.secondary.main};
   color: ${({ theme }) => theme.palette.grey[800]};
   &:hover {

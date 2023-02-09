@@ -5,7 +5,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ViewCompactIcon from '@mui/icons-material/ViewCompact';
 import { Divider } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import Popover from '@mui/material/Popover';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import React from 'react';
@@ -18,6 +17,7 @@ import {
   NavLogoText,
   PopoverButton,
   PopoverContainer,
+  VerticalPopover,
 } from './NavHeader.style';
 
 export default function NavHeader() {
@@ -56,15 +56,11 @@ export default function NavHeader() {
                   <IconButton aria-describedby={id} onClick={handleClick}>
                     <AccountCircleIcon />
                   </IconButton>
-                  <Popover
+                  <VerticalPopover
                     id={id}
                     open={open}
                     anchorEl={anchorEl}
                     onClose={handleClose}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
                   >
                     <PopoverContainer>
                       <Typography variant='button'>ADC.username</Typography>
@@ -78,7 +74,7 @@ export default function NavHeader() {
                         Logout
                       </PopoverButton>
                     </PopoverContainer>
-                  </Popover>
+                  </VerticalPopover>
                 </>
               </FlexBox>
             )}

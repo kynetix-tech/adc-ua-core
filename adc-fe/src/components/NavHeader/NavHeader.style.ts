@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
 
@@ -60,4 +61,12 @@ export const PopoverButton = styled(Button).attrs({
   margin-top: 1rem;
   color: ${({ theme }) => theme.palette.secondary.main};
   border-color: ${({ theme }) => theme.palette.secondary.main};
+  border-radius: 1.5rem;
 `;
+
+export const VerticalPopover = styled(Popover).attrs({
+  anchorOrigin: {
+    vertical: 'bottom',
+    horizontal: 'left',
+  },
+})``;

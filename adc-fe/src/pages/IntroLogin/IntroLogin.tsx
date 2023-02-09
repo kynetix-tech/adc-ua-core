@@ -12,8 +12,7 @@ import {
 } from './IntroLogin.style';
 
 export default function IntroLogin() {
-  const { loginWithRedirect, logout, isAuthenticated, getAccessTokenSilently } =
-    useAuth0();
+  const { loginWithRedirect, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   if (isAuthenticated) {
     (async () => {
@@ -35,11 +34,6 @@ export default function IntroLogin() {
           praesentium quis repudiandae sint tempora ut.
         </Typography>
       </TextContainer>
-      {/*<button*/}
-      {/*  onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}*/}
-      {/*>*/}
-      {/*  Log Out*/}
-      {/*</button>*/}
     </CenteredContainer>
   );
 }

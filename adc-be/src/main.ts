@@ -7,7 +7,7 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
-import { SwaggerConfig } from './config/interface';
+import { CorsConfig, SwaggerConfig } from './config/interface';
 import { AppModule } from './module/app.module';
 
 async function bootstrap() {
@@ -15,6 +15,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
+  const corsConfig = configService.get<CorsConfig>('cors');
+
+  app.enableCors(corsConfig);
 
   const swagger = configService.get<SwaggerConfig>('swagger');
   const swaggerConfig: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()

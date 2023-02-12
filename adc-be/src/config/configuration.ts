@@ -38,4 +38,9 @@ export const configuration = () => ({
       bearerFormat: 'JWT',
     },
   },
+  cors: {
+    origin: '*',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    credentials: true,
+  },
 });

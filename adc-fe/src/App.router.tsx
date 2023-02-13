@@ -4,6 +4,7 @@ import { Route } from 'react-router';
 import { Routes } from 'react-router-dom';
 
 import { NavbarContainerWrapper } from './components/NavContainerWrapper';
+import Home from './pages/Home';
 
 const LazyLogin = lazy(() => import('./pages/IntroLogin'));
 
@@ -26,7 +27,10 @@ const routes: RoutesConfig[] = [
   {
     path: paths.root.path,
     element: <NavbarContainerWrapper />,
-    children: [{ path: paths.login.path, element: <LazyLogin /> }],
+    children: [
+      { path: paths.login.path, element: <LazyLogin /> },
+      { path: paths.root.path, element: <Home /> },
+    ],
   },
 ];
 

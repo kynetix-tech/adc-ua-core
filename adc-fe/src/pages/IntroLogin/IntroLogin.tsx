@@ -12,13 +12,7 @@ import {
 } from './IntroLogin.style';
 
 export default function IntroLogin() {
-  const { loginWithRedirect, isAuthenticated, getAccessTokenSilently } = useAuth0();
-
-  if (isAuthenticated) {
-    (async () => {
-      console.log(await getAccessTokenSilently());
-    })();
-  }
+  const { loginWithRedirect } = useAuth0();
 
   return (
     <CenteredContainer>

@@ -21,7 +21,7 @@ import {
 } from './NavHeader.style';
 
 export default function NavHeader() {
-  const { isAuthenticated, logout } = useAuth0();
+  const { isAuthenticated, logout, user } = useAuth0();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -63,7 +63,7 @@ export default function NavHeader() {
                     onClose={handleClose}
                   >
                     <PopoverContainer>
-                      <Typography variant='button'>ADC.username</Typography>
+                      <Typography variant='button'>{user?.email}</Typography>
                       <Divider orientation='horizontal' variant='middle' flexItem />
                       <PopoverButton
                         startIcon={<LogoutIcon />}

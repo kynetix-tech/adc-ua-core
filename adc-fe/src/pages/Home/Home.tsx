@@ -1,15 +1,17 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
+import { useQuery } from 'react-query';
+
+import { DefaultService } from '../../service/Api';
 
 export default function Home() {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { data, isLoading } = useQuery(['p'], () => DefaultService.getPrivate(), {
+    onError: console.log,
+  });
 
-  if (isAuthenticated) {
-    (async () => {
-      console.log(await getAccessTokenSilently({ cacheMode: 'cache-only' }));
-      console.log(await getAccessTokenSilently());
-    })();
-  }
+  console.log(data);
+  // (async () => {
+  //   const res = await DefaultService.getHello();
+  // })();
 
   return <>Home</>;
 }

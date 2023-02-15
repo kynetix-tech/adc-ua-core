@@ -4,6 +4,7 @@ import { Route } from 'react-router';
 import { Routes } from 'react-router-dom';
 
 import { NavbarContainerWrapper } from './components/NavContainerWrapper';
+import { useApiTokenResolver } from './hooks/aunthefication/useApiTokenResolver';
 import Home from './pages/Home';
 
 const LazyLogin = lazy(() => import('./pages/IntroLogin'));
@@ -48,5 +49,7 @@ const getRoutes = (routes: RoutesConfig[]) => {
 };
 
 export function AppRouter() {
+  useApiTokenResolver();
+
   return <Routes>{getRoutes(routes)}</Routes>;
 }

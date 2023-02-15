@@ -27,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(BaseStrategy) {
   }
 
   validate(payload: TokenPayload): TokenPayload {
-    const minimumScope = ['offline_access'];
+    const minimumScope = ['openid', 'profile', 'email'];
 
     const scopes = payload?.scope.split(' ');
     if (scopes && !minimumScope.every((scope) => scopes.includes(scope))) {

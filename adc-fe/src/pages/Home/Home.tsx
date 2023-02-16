@@ -9,9 +9,5 @@ export default function Home() {
   });
 
   console.log(data);
-  // (async () => {
-  //   const res = await DefaultService.getHello();
-  // })();
-
   return <>Home</>;
 }

@@ -25,7 +25,7 @@ function App() {
               clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
               cacheLocation='localstorage'
               authorizationParams={{
-                redirect_uri: window.location.origin,
+                redirect_uri: `${window.location.origin}/home`,
                 audience: import.meta.env.VITE_AUTH0_AUDIENCE,
                 scope: 'openid profile email',
               }}

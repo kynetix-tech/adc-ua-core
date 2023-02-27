@@ -2,26 +2,22 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import {
   DocumentBuilder,
   OpenAPIObject,
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
-import { SwaggerConfig } from './config/interface';
+import { CorsConfig, SwaggerConfig } from './config/interface';
 import { AppModule } from './module/app.module';
 
 async function bootstrap() {
   const logger = new Logger(bootstrap.name);
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-  );
+  const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
+  const corsConfig = configService.get<CorsConfig>('cors');
+
+  app.enableCors(corsConfig);
 
   const swagger = configService.get<SwaggerConfig>('swagger');
   const swaggerConfig: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
@@ -33,7 +29,7 @@ async function bootstrap() {
       swagger.contact.url,
       swagger.contact.email,
     )
-    .addBearerAuth(swagger.authorization)
+    .addBearerAuth(swagger.authorization, 'authorization')
     .build();
 
   const options: SwaggerDocumentOptions = {
@@ -44,9 +40,10 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   const port = configService.get<number>('port');
-  await app.listen(port);
+  const host = configService.get<string>('host');
+  await app.listen(port, host);
 
-  logger.log(`Application is running on: ${await app.getUrl()}`);
+  logger.log(`Application is running on: ${await app.getUrl()}/api`);
 }
 
 bootstrap();

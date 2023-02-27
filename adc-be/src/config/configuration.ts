@@ -1,5 +1,6 @@
 export const configuration = () => ({
   port: 8080,
+  host: '127.0.0.1',
   db: {
     type: 'postgres',
     host: process.env.POSTGRES_HOST || '127.0.0.1',
@@ -36,5 +37,10 @@ export const configuration = () => ({
       scheme: 'bearer',
       bearerFormat: 'JWT',
     },
+  },
+  cors: {
+    origin: '*',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    credentials: true,
   },
 });

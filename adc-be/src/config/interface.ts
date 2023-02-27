@@ -27,3 +27,9 @@ export interface SwaggerConfig {
   contact: ContactObject;
   authorization: SecuritySchemeObject;
 }
+
+export interface CorsConfig {
+  origin: string;
+  methods: Array<string>;
+  credentials: boolean;
+}

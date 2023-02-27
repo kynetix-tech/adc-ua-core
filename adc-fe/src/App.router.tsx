@@ -46,10 +46,7 @@ const getRoutes = (routes: RoutesConfig[], isAuthenticated: boolean) => {
   return routes
     .filter(({ permission }) => {
       if (permission === PermissionType.guestOnly) return !isAuthenticated;
-      if (permission === PermissionType.authenticatedOnly) {
-        console.log('da' + isAuthenticated);
-        return isAuthenticated;
-      }
+      if (permission === PermissionType.authenticatedOnly) return isAuthenticated;
       if (!permission) return true;
     })
     .map(({ path, element, children }) => {

@@ -25,12 +25,13 @@ function App() {
               clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
               cacheLocation='localstorage'
               authorizationParams={{
-                redirect_uri: `${window.location.origin}/home`,
+                redirect_uri: `${window.location.origin}/login`,
                 audience: import.meta.env.VITE_AUTH0_AUDIENCE,
                 scope: 'openid profile email',
               }}
             >
               <AppRouter />
+              {/*<Home></Home>*/}
             </Auth0Provider>
           </MuiThemeProvider>
         </StyledEngineProvider>

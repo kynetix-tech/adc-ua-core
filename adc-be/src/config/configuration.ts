@@ -9,7 +9,7 @@ export const configuration = () => ({
     username: process.env.POSTGRES_USER || 'postgres',
     password: process.env.POSTGRES_PASSWORD || 'postgres',
     synchronize: false,
-    entities: ['dist/entity//*.{ts,js}'],
+    entities: ['src/entity//*.{ts,js}'],
     ormEntities: ['src/entity//*.ts'],
     migrations: ['src/migration//*.ts'],
     subscribers: ['src/subscriber//*.ts'],

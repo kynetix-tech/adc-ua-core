@@ -26,4 +26,15 @@ export class UsersService {
         });
     }
 
+    /**
+     * @returns UserResponse
+     * @throws ApiError
+     */
+    public static getCurrentUser(): CancelablePromise<UserResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/users/current',
+        });
+    }
+
 }

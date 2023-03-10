@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -31,13 +32,25 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.CREATED, type: UserResponse })
   public async register(
     @Body() body: UserRegisterRequest,
-    @Req() req: RequestWithAuth,
+    @Req() { user }: RequestWithAuth,
   ): Promise<UserResponse> {
-    const { auth0Id } = req.user;
-    const user = await this.userService.upsertUser(
+    const { auth0Id } = user;
+    const newUser = await this.userService.upsertUser(
       new UserModel(auth0Id, body.email, body.name),
     );
 
-    return this.userFormatter.toUserResponse(user);
+    return this.userFormatter.toUserResponse(newUser);
+  }
+
+  @Get('current')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
+  public async getCurrentUser(
+    @Req() { user }: RequestWithAuth,
+  ): Promise<UserResponse> {
+    const { auth0Id } = user;
+    const currentUser = await this.userService.getById(auth0Id);
+
+    return this.userFormatter.toUserResponse(currentUser);
   }
 }

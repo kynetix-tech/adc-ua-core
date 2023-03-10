@@ -1,4 +1,4 @@
-import { Auth0Provider } from '@auth0/auth0-react';
+import { AppState, Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import {
   StyledEngineProvider,
   ThemeProvider as MuiThemeProvider,
@@ -31,7 +31,6 @@ function App() {
               }}
             >
               <AppRouter />
-              {/*<Home></Home>*/}
             </Auth0Provider>
           </MuiThemeProvider>
         </StyledEngineProvider>

@@ -31,7 +31,6 @@ const routes: RoutesConfig[] = [
   {
     path: paths.login,
     element: <NavbarContainerWrapper />,
-    permission: PermissionType.guestOnly,
     children: [{ path: paths.root, element: <LazyLogin /> }],
   },
   {

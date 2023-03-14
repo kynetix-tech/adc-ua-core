@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { UserModel } from '../model/user.model';
-import { UserEntity } from '../entity/user.entity';
+import { Gender, UserEntity } from '../entity/user.entity';
 
 @Injectable()
 export class UserRepository {
@@ -26,7 +26,9 @@ export class UserRepository {
       .values({
         id: user.id,
         email: user.email,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        gender: user.gender,
         role: user.role,
       })
       .returning(['id'])
@@ -39,7 +41,9 @@ export class UserRepository {
     return new UserModel(
       userEntity.id,
       userEntity.email,
-      userEntity.name,
+      userEntity.firstName,
+      userEntity.lastName,
+      userEntity.gender,
       userEntity.role,
     );
   }

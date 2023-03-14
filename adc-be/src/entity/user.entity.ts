@@ -6,6 +6,12 @@ export enum Role {
   PostEditor = 'PostEditor',
 }
 
+export enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
+}
+
 @Entity('user_adc')
 export class UserEntity {
   @PrimaryColumn({
@@ -23,9 +29,23 @@ export class UserEntity {
 
   @Column({
     type: 'varchar',
+    name: 'first_name',
     length: 100,
   })
-  name: string;
+  firstName: string;
+
+  @Column({
+    type: 'varchar',
+    name: 'last_name',
+    length: 100,
+  })
+  lastName: string;
+
+  @Column({
+    type: 'enum',
+    enum: Gender,
+  })
+  gender: Gender;
 
   @Column({
     type: 'enum',

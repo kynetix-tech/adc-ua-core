@@ -36,7 +36,13 @@ export class UserController {
   ): Promise<UserResponse> {
     const { auth0Id } = user;
     const newUser = await this.userService.upsertUser(
-      new UserModel(auth0Id, body.email, body.name),
+      new UserModel(
+        auth0Id,
+        body.email,
+        body.firstName,
+        body.lastName,
+        body.gender,
+      ),
     );
 
     return this.userFormatter.toUserResponse(newUser);

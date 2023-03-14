@@ -6,6 +6,7 @@ import { Navigate } from 'react-router';
 
 import logo from '../../assets/logos/ADC_ animated.gif';
 import { AnimatedText } from '../../components/AnimatedText';
+import UserRegisterInfoForm from '../../components/UserRegisterInfoForm';
 import { UsersService } from '../../service/Api';
 import {
   CenteredContainer,
@@ -38,7 +39,9 @@ export default function IntroLogin() {
     <>
       {isRegisterUser && <Navigate to={'/'} />}
       {isOnlyAuth0User ? (
-        <div>a</div>
+        <CenteredContainer>
+          <UserRegisterInfoForm />
+        </CenteredContainer>
       ) : (
         <CenteredContainer>
           <ImgLogo src={logo} alt='ADC' />

@@ -1,10 +1,16 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router';
 
+import { paths } from '../../App.router';
 import logo from '../../assets/logos/adc-ua-logo.png';
+import { Entity, Gender } from '../../interface/api-interface';
+import { UserRegisterRequest, UsersService } from '../../service/Api';
 import { UniversalButton } from '../../styled-global/global-styled-components';
 import {
   Form,
@@ -15,25 +21,54 @@ import {
 } from './UserRegisterInfoForm.style';
 
 export default function UserRegisterInfoForm() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [gender, setGender] = useState('');
+  const { user } = useAuth0();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [gender, setGender] = useState<Gender | string>('');
+
+  const { mutate: registerUser } = useMutation(
+    [Entity.User],
+    (userRegisterInfo: UserRegisterRequest) => {
+      return UsersService.register(userRegisterInfo);
+    },
+    {
+      onError: console.log,
+      onSuccess: () => queryClient.invalidateQueries(Entity.User),
+      onSettled: () => navigate(paths.root),
+    },
+  );
 
   const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFirstName(event.target.value);
+    setFirstName(event.target.value.trim());
   };
 
   const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(event.target.value);
+    setLastName(event.target.value.trim());
   };
 
   const handleGenderChange = (event: SelectChangeEvent<unknown>) => {
-    setGender(event.target.value as string);
+    setGender(event.target.value as Gender);
+  };
+
+  const isNameValid = (name: string, count: number) => {
+    const forbiddenCharacters = /[!@#$%^&*(),.?":{}|<>]/g;
+    return !name || (name.trim().length >= count && !forbiddenCharacters.test(name));
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // handle form submission
+    const email = user?.email;
+    if (isNameValid(firstName, 2) && isNameValid(lastName, 3) && email) {
+      registerUser({
+        email,
+        firstName,
+        lastName,
+        gender,
+      });
+    }
   };
 
   return (
@@ -46,6 +81,12 @@ export default function UserRegisterInfoForm() {
           value={firstName}
           onChange={handleFirstNameChange}
           variant='outlined'
+          error={!isNameValid(firstName, 2)}
+          helperText={
+            !firstName || isNameValid(firstName, 2)
+              ? ''
+              : 'Name not valid (check length >= 2 & characters)'
+          }
           required
         />
         <StyledTextField
@@ -53,6 +94,12 @@ export default function UserRegisterInfoForm() {
           value={lastName}
           onChange={handleLastNameChange}
           variant='outlined'
+          error={!isNameValid(lastName, 3)}
+          helperText={
+            isNameValid(lastName, 3)
+              ? ''
+              : 'Last not valid (check length >= 2 & characters)'
+          }
           required
         />
         <StyledFormControl fullWidth>
@@ -65,9 +112,9 @@ export default function UserRegisterInfoForm() {
             variant='outlined'
             required
           >
-            <MenuItem value='male'>Male</MenuItem>
-            <MenuItem value='female'>Female</MenuItem>
-            <MenuItem value='other'>Other</MenuItem>
+            <MenuItem value={Gender.Male}>{Gender.Male}</MenuItem>
+            <MenuItem value={Gender.Female}>{Gender.Female}</MenuItem>
+            <MenuItem value={Gender.Other}>{Gender.Other}</MenuItem>
           </Select>
         </StyledFormControl>
         <UniversalButton type='submit' variant='contained'>

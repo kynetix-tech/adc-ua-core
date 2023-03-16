@@ -4,6 +4,8 @@
 
 export type UserRegisterRequest = {
     email: string;
-    name: string;
+    firstName: string;
+    lastName: string;
+    gender: string;
 };
 

@@ -7,6 +7,7 @@ import { Navigate } from 'react-router';
 import logo from '../../assets/logos/ADC_ animated.gif';
 import { AnimatedText } from '../../components/AnimatedText';
 import UserRegisterInfoForm from '../../components/UserRegisterInfoForm';
+import { Entity } from '../../interface/api-interface';
 import { UsersService } from '../../service/Api';
 import {
   CenteredContainer,
@@ -18,7 +19,7 @@ import {
 export default function IntroLogin() {
   const { loginWithRedirect, isAuthenticated, isLoading: isLoadingAuth0 } = useAuth0();
   const { data: user, isLoading: isLoadingServer } = useQuery(
-    ['p'],
+    [Entity.User],
     () => UsersService.getCurrentUser(),
     {
       onError: console.log,

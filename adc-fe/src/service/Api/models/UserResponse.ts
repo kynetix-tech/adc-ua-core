@@ -5,7 +5,9 @@
 export type UserResponse = {
     id: string;
     email: string;
-    name: string;
+    firstName: string;
+    lastName: string;
+    gender: string;
     role: string;
 };
 

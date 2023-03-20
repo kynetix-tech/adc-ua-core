@@ -9,6 +9,8 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CommentEntity } from './comment.entity';
+import { CarMakeEntity } from './car-make.entity';
+import { CarModelEntity } from './car-model.entity';
 
 export interface ContentItem {
   id: number;
@@ -46,6 +48,25 @@ export class PostEntity {
     nullable: true,
   })
   content: Array<ContentItem>;
+
+  @Column({
+    type: 'integer',
+    default: 0,
+  })
+  likes: number;
+
+  @Column({
+    type: 'integer',
+  })
+  carYear: string;
+
+  @ManyToOne(() => CarMakeEntity)
+  @JoinColumn({ name: 'car_make_id' })
+  carMake: CarMakeEntity;
+
+  @ManyToOne(() => CarModelEntity)
+  @JoinColumn({ name: 'car_model_id' })
+  carModel: CarModelEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   @JoinColumn({ name: 'user_id' })

@@ -28,3 +28,11 @@ export class CarMakeResponse {
   @ApiProperty()
   title: string;
 }
+
+export class CarModelResponse {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  title: string;
+}

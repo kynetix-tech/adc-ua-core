@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 import { CarMakeEntity } from '../entity/car-make.entity';
 import { CarMakeModel } from '../model/car-make.model';
 
 @Injectable()
 export class CarMakeRepository {
-  constructor(private manager: EntityManager) {}
+  private queryBuilder: SelectQueryBuilder<CarMakeEntity>;
+
+  constructor(private manager: EntityManager) {
+    this.queryBuilder = this.manager
+      .getRepository(CarMakeEntity)
+      .createQueryBuilder();
+  }
 
   public static toCarMakeModel(carMakeEntity?: CarMakeEntity) {
     return new CarMakeModel(carMakeEntity.id, carMakeEntity.title);
@@ -15,9 +21,7 @@ export class CarMakeRepository {
     likeStr: string,
     limit: number,
   ): Promise<CarMakeModel[]> {
-    const carMakesEntity = await this.manager
-      .getRepository(CarMakeEntity)
-      .createQueryBuilder()
+    const carMakesEntity = await this.queryBuilder
       .where(`UPPER(title) like UPPER('${likeStr}%')`, { likeStr })
       .limit(limit)
       .getMany();

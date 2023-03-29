@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 import { UserModel } from '../model/user.model';
 import { UserEntity } from '../entity/user.entity';
 
 @Injectable()
 export class UserRepository {
-  constructor(private manager: EntityManager) {}
+  private queryBuilder: SelectQueryBuilder<UserEntity>;
+
+  constructor(private manager: EntityManager) {
+    this.queryBuilder = this.manager
+      .getRepository(UserEntity)
+      .createQueryBuilder();
+  }
 
   public static toUserModel(userEntity?: UserEntity): UserModel {
     return new UserModel(
@@ -19,9 +25,7 @@ export class UserRepository {
   }
 
   public async getByAuth0Id(auth0Id: string): Promise<UserModel> {
-    const userEntity = await this.manager
-      .getRepository(UserEntity)
-      .createQueryBuilder()
+    const userEntity = await this.queryBuilder
       .where('auth0_id = :auth0Id', { auth0Id })
       .getOne();
 
@@ -29,9 +33,7 @@ export class UserRepository {
   }
 
   public async register(user: UserModel): Promise<string> {
-    const { raw } = await this.manager
-      .getRepository(UserEntity)
-      .createQueryBuilder()
+    const { raw } = await this.queryBuilder
       .insert()
       .into(UserEntity)
       .values({

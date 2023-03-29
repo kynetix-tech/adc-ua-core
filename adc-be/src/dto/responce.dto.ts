@@ -20,3 +20,11 @@ export class UserResponse {
   @ApiProperty()
   role: Role;
 }
+
+export class CarMakeResponse {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  title: string;
+}

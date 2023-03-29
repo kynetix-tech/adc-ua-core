@@ -58,7 +58,7 @@ export class PostEntity {
   @Column({
     type: 'integer',
   })
-  carYear: string;
+  carYear: number;
 
   @ManyToOne(() => CarMakeEntity)
   @JoinColumn({ name: 'car_make_id' })

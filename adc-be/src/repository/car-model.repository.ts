@@ -10,7 +10,7 @@ export class CarModelRepository {
   constructor(private manager: EntityManager) {
     this.queryBuilder = this.manager
       .getRepository(CarModelEntity)
-      .createQueryBuilder();
+      .createQueryBuilder('car_model');
   }
 
   public static toCarModelModel(carModelEntity: CarModelEntity) {

@@ -10,7 +10,7 @@ export class UserRepository {
   constructor(private manager: EntityManager) {
     this.queryBuilder = this.manager
       .getRepository(UserEntity)
-      .createQueryBuilder();
+      .createQueryBuilder('user');
   }
 
   public static toUserModel(userEntity?: UserEntity): UserModel {

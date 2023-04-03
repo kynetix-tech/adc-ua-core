@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entity/user.entity';
+import { ContentItem } from './responce.dto';
 
 export class UserRegisterRequest {
   @ApiProperty()
@@ -13,4 +14,21 @@ export class UserRegisterRequest {
 
   @ApiProperty()
   gender: Gender;
+}
+
+export class PostCreateRequest {
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty({ isArray: true, type: ContentItem })
+  content: Array<ContentItem>;
+
+  @ApiProperty()
+  carYear: number;
+
+  @ApiProperty()
+  carMakeId: number;
+
+  @ApiProperty()
+  carModelId: number;
 }

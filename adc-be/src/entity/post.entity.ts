@@ -44,7 +44,7 @@ export class PostEntity {
 
   @Column({
     type: 'json',
-    array: true,
+    default: () => `'[]'`,
     nullable: true,
   })
   content: Array<ContentItem>;
@@ -57,8 +57,29 @@ export class PostEntity {
 
   @Column({
     type: 'integer',
+    nullable: true,
   })
   carYear: number;
+
+  @Column({
+    type: 'string',
+    name: 'user_id',
+  })
+  userId: string;
+
+  @Column({
+    type: 'integer',
+    nullable: true,
+    name: 'car_make_id',
+  })
+  carMakeId: number;
+
+  @Column({
+    type: 'integer',
+    nullable: true,
+    name: 'car_model_id',
+  })
+  carModelId: number;
 
   @ManyToOne(() => CarMakeEntity)
   @JoinColumn({ name: 'car_make_id' })

@@ -36,3 +36,46 @@ export class CarModelResponse {
   @ApiProperty()
   title: string;
 }
+
+export class ContentItem {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  type: 'text' | 'img';
+
+  @ApiProperty()
+  content: string;
+}
+
+export class PostResponse {
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty({ isArray: true, type: ContentItem })
+  content: Array<ContentItem>;
+
+  @ApiProperty()
+  carYear: number;
+
+  @ApiProperty()
+  carMake: CarMakeResponse;
+
+  @ApiProperty()
+  carModel: CarModelResponse;
+
+  @ApiProperty()
+  user: UserResponse;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
+
+  @ApiProperty()
+  likes: number;
+
+  @ApiProperty()
+  id: number;
+}

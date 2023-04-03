@@ -2,18 +2,30 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repository/user.repository';
 import { UserModel } from '../model/user.model';
 import { ApplicationError } from '../shared/aplication.error';
+import { UserRegisterRequest } from '../dto/request.dto';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async upsertUser(user: UserModel): Promise<UserModel> {
-    const existingUser = await this.userRepository.getByAuth0Id(user.id);
+  public async upsertUser(
+    user: UserRegisterRequest,
+    auth0Id: string,
+  ): Promise<UserModel> {
+    const existingUser = await this.userRepository.getByAuth0Id(auth0Id);
     if (existingUser) {
       return existingUser;
     }
 
-    const id = await this.userRepository.register(user);
+    const userModel = new UserModel(
+      auth0Id,
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.gender,
+    );
+
+    const id = await this.userRepository.register(userModel);
     return await this.userRepository.getByAuth0Id(id);
   }
 

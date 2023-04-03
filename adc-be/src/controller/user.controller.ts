@@ -35,15 +35,7 @@ export class UserController {
     @Req() { user }: RequestWithAuth,
   ): Promise<UserResponse> {
     const { auth0Id } = user;
-    const newUser = await this.userService.upsertUser(
-      new UserModel(
-        auth0Id,
-        body.email,
-        body.firstName,
-        body.lastName,
-        body.gender,
-      ),
-    );
+    const newUser = await this.userService.upsertUser(body, auth0Id);
 
     return this.userFormatter.toUserResponse(newUser);
   }

@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PostViewModel } from '../model/post.model';
-import { PostResponse } from '../dto/responce.dto';
+import {
+  ImageUploadResponse,
+  PostCreationResponse,
+  PostResponse,
+} from '../dto/responce.dto';
 import { CarSpecificationFormatter } from './car-specification.formatter';
 import { UserFormatter } from './user.formatter';
 
@@ -30,5 +34,13 @@ export class PostFormatter {
 
   public toPostsResponse(posts: PostViewModel[]): Array<PostResponse> {
     return posts.map(this.toPostResponse.bind(this));
+  }
+
+  public toPostCreationResponse(postId: number): PostCreationResponse {
+    return { postId };
+  }
+
+  public toImageUploadResponse(filename: string): ImageUploadResponse {
+    return { filename };
   }
 }

@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 export const configuration = () => ({
   port: 8080,
@@ -45,5 +45,8 @@ export const configuration = () => ({
     origin: '*',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     credentials: true,
+  },
+  media: {
+    storageDir: resolve(join('..', 'uploads')),
   },
 });

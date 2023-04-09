@@ -7,15 +7,29 @@ import {
   Param,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { PostService } from '../service/post.service';
 import { PostFormatter } from '../formatter/post.formatter';
-import { PostResponse } from '../dto/responce.dto';
+import {
+  ImageUploadResponse,
+  PostCreationResponse,
+  PostResponse,
+} from '../dto/responce.dto';
 import { RequestWithAuth } from '../types/interfaces';
 import { PostCreateRequest } from '../dto/request.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadFileSchema } from '../common/shemas/shemas';
 
 @ApiTags('Post')
 @UseGuards(AuthGuard('jwt'))
@@ -38,14 +52,26 @@ export class PostController {
 
   @Post('new')
   @HttpCode(HttpStatus.CREATED)
-  @ApiResponse({ status: HttpStatus.CREATED, type: Number })
+  @ApiResponse({ status: HttpStatus.CREATED, type: PostCreationResponse })
   public async createPost(
     @Req() { user }: RequestWithAuth,
     @Body() body: PostCreateRequest,
-  ) {
+  ): Promise<PostCreationResponse> {
     const { auth0Id } = user;
     const newPostId = await this.postService.createNewPost(body, auth0Id);
 
-    return newPostId;
+    return this.postFormatter.toPostCreationResponse(newPostId);
+  }
+
+  @Post('upload-image')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: HttpStatus.OK, type: ImageUploadResponse })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody(UploadFileSchema)
+  @UseInterceptors(FileInterceptor('file'))
+  public async uploadImage(@UploadedFile() file): Promise<ImageUploadResponse> {
+    const { filename } = file;
+
+    return this.postFormatter.toImageUploadResponse(filename);
   }
 }

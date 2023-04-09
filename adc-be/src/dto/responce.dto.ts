@@ -79,3 +79,13 @@ export class PostResponse {
   @ApiProperty()
   id: number;
 }
+
+export class PostCreationResponse {
+  @ApiProperty()
+  postId: number;
+}
+
+export class ImageUploadResponse {
+  @ApiProperty()
+  filename: string;
+}

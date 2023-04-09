@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repository/user.repository';
 import { UserModel } from '../model/user.model';
-import { ApplicationError } from '../shared/aplication.error';
+import { ApplicationError } from '../common/aplication.error';
 import { UserRegisterRequest } from '../dto/request.dto';
 
 @Injectable()

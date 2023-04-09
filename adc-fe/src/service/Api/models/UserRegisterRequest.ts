@@ -1,0 +1,11 @@
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+export type UserRegisterRequest = {
+    email: string;
+    firstName: string;
+    lastName: string;
+    gender: string;
+};
+

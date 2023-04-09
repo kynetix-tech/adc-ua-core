@@ -36,6 +36,6 @@ export class JwtStrategy extends PassportStrategy(BaseStrategy) {
       );
     }
 
-    return {};
+    return { auth0Id: payload.sub };
   }
 }

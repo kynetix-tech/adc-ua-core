@@ -48,5 +48,6 @@ export const configuration = () => ({
   },
   media: {
     storageDir: resolve(join('..', 'uploads')),
+    fileNameSalt: 'example salt for hash',
   },
 });

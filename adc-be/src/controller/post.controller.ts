@@ -69,9 +69,13 @@ export class PostController {
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileSchema)
   @UseInterceptors(FileInterceptor('file'))
-  public async uploadImage(@UploadedFile() file): Promise<ImageUploadResponse> {
-    const { filename } = file;
+  public async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() { user }: RequestWithAuth,
+  ): Promise<ImageUploadResponse> {
+    const { auth0Id } = user;
+    const fileName = await this.postService.upsertImageForPost(file, auth0Id);
 
-    return this.postFormatter.toImageUploadResponse(filename);
+    return this.postFormatter.toImageUploadResponse(fileName);
   }
 }

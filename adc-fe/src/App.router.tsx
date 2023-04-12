@@ -9,6 +9,7 @@ import { useApiTokenResolver } from './hooks/aunthefication/useApiTokenResolver'
 
 const LazyLogin = lazy(() => import('./pages/IntroLogin'));
 const LazyHome = lazy(() => import('./pages/Home'));
+const LazyNewPost = lazy(() => import('./pages/NewPost'));
 
 enum PermissionType {
   authenticatedOnly,
@@ -25,6 +26,10 @@ interface RoutesConfig {
 export const paths = {
   root: '',
   login: 'login',
+  post: {
+    root: 'post',
+    new: 'new',
+  },
 };
 
 const routes: RoutesConfig[] = [
@@ -38,6 +43,11 @@ const routes: RoutesConfig[] = [
     element: <NavbarContainerWrapper />,
     permission: PermissionType.authenticatedOnly,
     children: [{ path: paths.root, element: <LazyHome /> }],
+  },
+  {
+    path: paths.post.root,
+    element: <NavbarContainerWrapper />,
+    children: [{ path: paths.post.new, element: <LazyNewPost /> }],
   },
 ];
 

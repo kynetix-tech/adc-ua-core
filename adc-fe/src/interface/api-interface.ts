@@ -5,5 +5,7 @@ export enum Gender {
 }
 
 export enum Entity {
-  User = 'UserEntity',
+  User = 'User',
+  CarMake = 'CarMake',
+  CarModel = 'CarModel',
 }

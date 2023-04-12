@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -77,5 +78,12 @@ export class PostController {
     const fileName = await this.postService.upsertImageForPost(file, auth0Id);
 
     return this.postFormatter.toImageUploadResponse(fileName);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: HttpStatus.OK })
+  public async deletePost(@Param('id') postId: number) {
+    return null;
   }
 }

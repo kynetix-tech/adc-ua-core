@@ -9,6 +9,7 @@ import { AuthModule } from '../auth/auth.module';
 import { UserModule } from './user.module';
 import { CarSpecificationModule } from './car-specification.module';
 import { PostModule } from './post.module';
+import { PublicStaticModule } from './public-static.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { PostModule } from './post.module';
     UserModule,
     CarSpecificationModule,
     PostModule,
+    PublicStaticModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,6 @@
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 import styled from 'styled-components';
 
 export const UniversalButton = styled(Button).attrs({
@@ -12,5 +14,31 @@ export const UniversalButton = styled(Button).attrs({
   &:hover {
     background-color: ${({ theme }) => theme.palette.grey[800]};
     color: ${({ theme }) => theme.palette.secondary.main};
+  }
+`;
+
+export const PageContainer = styled(Container).attrs({
+  maxWidth: false,
+})`
+  padding-top: 1rem;
+  max-width: 88vw;
+  padding-left: 0;
+  padding-right: 0;
+`;
+
+export const CenteredTextBox = styled(Box)`
+  text-align: center;
+`;
+
+export const StyledButton = styled(Button).attrs({
+  variant: 'outlined',
+})`
+  color: ${({ theme }) => theme.palette.secondary.main};
+  border-color: ${({ theme }) => theme.palette.secondary.main};
+  border-radius: 2rem;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.palette.secondary.main};
+    background-color: ${({ theme }) => theme.palette.grey[700]};
   }
 `;

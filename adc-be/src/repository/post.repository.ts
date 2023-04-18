@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { PostEntity } from '../entity/post.entity';
 import { PostCreateModel, PostViewModel } from '../model/post.model';
 import { CarMakeRepository } from './car-make.repository';

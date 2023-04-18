@@ -39,9 +39,6 @@ export class CarModelResponse {
 
 export class ContentItem {
   @ApiProperty()
-  id: number;
-
-  @ApiProperty()
   type: 'text' | 'img';
 
   @ApiProperty()

@@ -13,7 +13,6 @@ import { CarMakeEntity } from './car-make.entity';
 import { CarModelEntity } from './car-model.entity';
 
 export interface ContentItem {
-  id: number;
   type: 'text' | 'img';
   content: string;
 }

@@ -24,6 +24,7 @@ interface RoutesConfig {
 }
 
 export const paths = {
+  default: '/',
   root: '',
   login: 'login',
   post: {

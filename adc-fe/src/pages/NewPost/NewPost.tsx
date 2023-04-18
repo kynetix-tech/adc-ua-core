@@ -1,17 +1,18 @@
-import AddIcon from '@mui/icons-material/Add';
-import { Autocomplete, Menu } from '@mui/material';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
+import PublishIcon from '@mui/icons-material/Publish';
+import { Autocomplete } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import React from 'react';
-import { useQuery } from 'react-query';
+import React, { useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router';
 
+import { paths } from '../../App.router';
+import PostContentView from '../../components/PostContentView';
 import { Entity } from '../../interface/api-interface';
 import { AutocompleteOption } from '../../interface/common';
-import { CarSpecificationService, ContentItem } from '../../service/Api';
+import { CarSpecificationService, ContentItem, PostService } from '../../service/Api';
 import {
   CenteredTextBox,
   PageContainer,
@@ -27,19 +28,14 @@ import {
 type AutocompleteType = AutocompleteOption | null;
 
 export default function NewPost() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [title, setTitle] = React.useState<string>('');
   const [inputMake, setInputMake] = React.useState<AutocompleteType>(null);
   const [inputModel, setInputModel] = React.useState<AutocompleteType>(null);
   const [carYear, setCarYear] = React.useState<Date | null>();
   const [content, setContent] = React.useState<ContentItem[]>([]);
-
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [isFormValid, setIsFormValid] = React.useState<boolean>(false);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: makes, isLoading: isLoadingMakes } = useQuery(
     [Entity.CarMake],
@@ -53,17 +49,52 @@ export default function NewPost() {
     { onError: console.log, refetchOnWindowFocus: false, refetchOnMount: false },
   );
 
-  console.log({
-    inputMake,
-    inputModel,
-    carYear: carYear?.getFullYear(),
-  });
+  const validateForm = () => {
+    if (title && inputMake && inputModel && carYear && content.length) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+  };
+
+  const { mutate: createPost } = useMutation(
+    [Entity.PostContent],
+    async () => {
+      if (inputMake && inputModel && carYear)
+        PostService.createPost({
+          title,
+          content,
+          carYear: carYear.getFullYear(),
+          carMakeId: inputMake.id,
+          carModelId: inputModel.id,
+        });
+    },
+    {
+      onError: console.log,
+      onSuccess: () => queryClient.invalidateQueries([Entity.PostContent]),
+    },
+  );
+
+  useEffect(validateForm, [title, inputMake, inputModel, carYear, content]);
 
   return (
     <PageContainer>
       <PostPaperBackground>
         <Typography variant='h5'>Create new post</Typography>
-        <TitleField required label='Title' variant='outlined' />
+        {!isFormValid && (
+          <Typography>
+            *You need to fill in all the required fields for publication
+          </Typography>
+        )}
+        <TitleField
+          required
+          label='Title'
+          variant='outlined'
+          value={title}
+          onChange={(event) => {
+            setTitle(event.target.value);
+          }}
+        />
         <FlexBoxCarSpecify>
           <FlexItem>
             <Autocomplete
@@ -110,30 +141,17 @@ export default function NewPost() {
         </FlexBoxCarSpecify>
 
         <CenteredTextBox>
+          <PostContentView content={content} setContent={setContent} />
           <StyledButton
-            id='plus-btn'
-            aria-controls={open ? 'plus-btn' : undefined}
-            aria-haspopup='true'
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
-            startIcon={<AddIcon />}
-          >
-            Add new item
-          </StyledButton>
-          <Menu
-            id='plus-btn'
-            aria-labelledby='plus-btn'
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'center',
+            onClick={() => {
+              // createPost([]);
+              navigate(paths.default);
             }}
+            disabled={!isFormValid}
+            startIcon={<PublishIcon />}
           >
-            <MenuItem onClick={handleClose}>Text</MenuItem>
-            <MenuItem onClick={handleClose}>Image</MenuItem>
-          </Menu>
+            Submit
+          </StyledButton>
         </CenteredTextBox>
       </PostPaperBackground>
     </PageContainer>

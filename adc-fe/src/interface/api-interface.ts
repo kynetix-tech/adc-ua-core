@@ -8,4 +8,5 @@ export enum Entity {
   User = 'User',
   CarMake = 'CarMake',
   CarModel = 'CarModel',
+  PostContent = 'PostContent',
 }

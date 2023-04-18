@@ -7,8 +7,11 @@ import { Divider } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { join } from 'path';
 import React from 'react';
+import { useNavigate } from 'react-router';
 
+import { paths } from '../../App.router';
 import {
   FlexBox,
   NavAppBar,
@@ -22,6 +25,7 @@ import {
 
 export default function NavHeader() {
   const { isAuthenticated, logout, user } = useAuth0();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,7 +53,11 @@ export default function NavHeader() {
                 <IconButton>
                   <ViewCompactIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={() =>
+                    navigate(join(paths.default, paths.post.root, paths.post.new))
+                  }
+                >
                   <AddCircleOutlineIcon />
                 </IconButton>
                 <>

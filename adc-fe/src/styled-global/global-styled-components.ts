@@ -36,6 +36,7 @@ export const StyledButton = styled(Button).attrs({
   color: ${({ theme }) => theme.palette.secondary.main};
   border-color: ${({ theme }) => theme.palette.secondary.main};
   border-radius: 2rem;
+  margin: 0.5rem;
 
   &:hover {
     border-color: ${({ theme }) => theme.palette.secondary.main};

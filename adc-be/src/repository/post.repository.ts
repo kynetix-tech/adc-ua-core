@@ -58,4 +58,17 @@ export class PostRepository {
 
     return raw[0].id;
   }
+
+  public async getNewestPosts(limit?: number): Promise<PostViewModel[]> {
+    const postEntity = await this.repository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.carModel', 'carModel')
+      .leftJoinAndSelect('post.carMake', 'carMake')
+      .leftJoinAndSelect('post.user', 'user')
+      .orderBy('created_at', 'DESC')
+      .limit(limit)
+      .getMany();
+
+    return postEntity.map(PostRepository.toPostModel);
+  }
 }

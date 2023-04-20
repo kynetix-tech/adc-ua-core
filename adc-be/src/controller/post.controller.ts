@@ -16,6 +16,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -78,6 +79,16 @@ export class PostController {
     const fileName = await this.postService.upsertImageForPost(file, auth0Id);
 
     return this.postFormatter.toImageUploadResponse(fileName);
+  }
+
+  @Get('newest')
+  @HttpCode(HttpStatus.OK)
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiResponse({ status: HttpStatus.OK, type: PostResponse, isArray: true })
+  public async getNewest(limit?: number): Promise<PostResponse[]> {
+    const posts = await this.postService.getNewestPostWithLimit(limit);
+
+    return this.postFormatter.toPostsResponse(posts);
   }
 
   @Delete(':id')

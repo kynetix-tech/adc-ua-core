@@ -5,6 +5,7 @@ import { PostCreateModel, PostViewModel } from '../model/post.model';
 import { CarMakeRepository } from './car-make.repository';
 import { CarModelRepository } from './car-model.repository';
 import { UserRepository } from './user.repository';
+import { take } from 'rxjs';
 
 @Injectable()
 export class PostRepository {
@@ -59,14 +60,18 @@ export class PostRepository {
     return raw[0].id;
   }
 
-  public async getNewestPosts(limit?: number): Promise<PostViewModel[]> {
+  public async getNewestPosts(
+    limit?: number,
+    offset = 0,
+  ): Promise<PostViewModel[]> {
     const postEntity = await this.repository
       .createQueryBuilder('post')
+      .offset(offset)
+      .limit(limit)
       .leftJoinAndSelect('post.carModel', 'carModel')
       .leftJoinAndSelect('post.carMake', 'carMake')
       .leftJoinAndSelect('post.user', 'user')
-      .orderBy('created_at', 'DESC')
-      .limit(limit)
+      .orderBy('post.id', 'DESC')
       .getMany();
 
     return postEntity.map(PostRepository.toPostModel);

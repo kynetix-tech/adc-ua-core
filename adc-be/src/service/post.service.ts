@@ -10,12 +10,12 @@ import { CheckSumModel } from '../model/checkSumModel';
 import { ConfigService } from '@nestjs/config';
 import { extname } from 'path';
 import { ApplicationError } from '../common/aplication.error';
+import { of } from 'rxjs';
 
 @Injectable()
 export class PostService {
   private readonly mediaDirPath: string;
   private readonly saltFileName: string;
-  private readonly DEFAULT_LIMIT = 100;
 
   constructor(
     private readonly postRepository: PostRepository,
@@ -30,10 +30,11 @@ export class PostService {
     return await this.postRepository.getAllByUserId(userId);
   }
 
-  async getNewestPostWithLimit(limit?: number): Promise<PostViewModel[]> {
-    return await this.postRepository.getNewestPosts(
-      limit || this.DEFAULT_LIMIT,
-    );
+  async getNewestPostWithLimit(
+    limit: number,
+    offset: number,
+  ): Promise<PostViewModel[]> {
+    return await this.postRepository.getNewestPosts(limit, offset);
   }
 
   async createNewPost(

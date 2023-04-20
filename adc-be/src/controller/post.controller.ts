@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -38,6 +39,9 @@ import { UploadFileSchema } from '../common/shemas/shemas';
 @ApiBearerAuth('authorization')
 @Controller('post')
 export class PostController {
+  private readonly DEFAULT_LIMIT = 40;
+  private readonly DEFAULT_OFFSET = 0;
+
   constructor(
     private readonly postService: PostService,
     private readonly postFormatter: PostFormatter,
@@ -84,9 +88,13 @@ export class PostController {
   @Get('newest')
   @HttpCode(HttpStatus.OK)
   @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'offset', required: false })
   @ApiResponse({ status: HttpStatus.OK, type: PostResponse, isArray: true })
-  public async getNewest(limit?: number): Promise<PostResponse[]> {
-    const posts = await this.postService.getNewestPostWithLimit(limit);
+  public async getNewest(
+    @Query('limit') limit: number = this.DEFAULT_LIMIT,
+    @Query('offset') offset: number = this.DEFAULT_OFFSET,
+  ): Promise<PostResponse[]> {
+    const posts = await this.postService.getNewestPostWithLimit(limit, offset);
 
     return this.postFormatter.toPostsResponse(posts);
   }

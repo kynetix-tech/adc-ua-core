@@ -50,7 +50,7 @@ export default function NavHeader() {
             </FlexBox>
             {isAuthenticated && (
               <FlexBox>
-                <IconButton>
+                <IconButton onClick={() => navigate(join(paths.default))}>
                   <ViewCompactIcon />
                 </IconButton>
                 <IconButton

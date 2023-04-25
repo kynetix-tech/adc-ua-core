@@ -7,6 +7,7 @@ export const PostPaperBackground = styled(Box)`
   border-radius: 1rem;
   padding: 1rem;
   min-height: 85vh;
+  border-color: ${({ theme }) => theme.palette.grey['A700']};
 `;
 
 export const FlexBoxCarSpecify = styled(Box)`

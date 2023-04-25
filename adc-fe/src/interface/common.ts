@@ -9,3 +9,8 @@ export enum ContentTypes {
   Text = 'text',
   Img = 'img',
 }
+
+export enum TabType {
+  Newest,
+  Popular,
+}

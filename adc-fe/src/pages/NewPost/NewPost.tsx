@@ -144,7 +144,7 @@ export default function NewPost() {
           <PostContentView content={content} setContent={setContent} />
           <StyledButton
             onClick={() => {
-              // createPost([]);
+              createPost(null);
               navigate(paths.default);
             }}
             disabled={!isFormValid}

@@ -64,6 +64,26 @@ export class PostService {
     }
 
     /**
+     * @param limit
+     * @param offset
+     * @returns PostResponse
+     * @throws ApiError
+     */
+    public static getNewest(
+        limit?: number,
+        offset?: number,
+    ): CancelablePromise<Array<PostResponse>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/post/newest',
+            query: {
+                'limit': limit,
+                'offset': offset,
+            },
+        });
+    }
+
+    /**
      * @param id
      * @returns any
      * @throws ApiError

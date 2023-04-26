@@ -99,6 +99,15 @@ export class PostController {
     return this.postFormatter.toPostsResponse(posts);
   }
 
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: HttpStatus.OK, type: PostResponse })
+  public async getPostById(@Param('id') id: number) {
+    const post = await this.postService.getPostById(id);
+
+    return this.postFormatter.toPostResponse(post);
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK })

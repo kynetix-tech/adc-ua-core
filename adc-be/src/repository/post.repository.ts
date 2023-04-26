@@ -5,7 +5,6 @@ import { PostCreateModel, PostViewModel } from '../model/post.model';
 import { CarMakeRepository } from './car-make.repository';
 import { CarModelRepository } from './car-model.repository';
 import { UserRepository } from './user.repository';
-import { take } from 'rxjs';
 
 @Injectable()
 export class PostRepository {
@@ -75,5 +74,19 @@ export class PostRepository {
       .getMany();
 
     return postEntity.map(PostRepository.toPostModel);
+  }
+
+  public async getPostById(postId: number): Promise<PostViewModel> {
+    const postEntity = await this.repository
+      .createQueryBuilder('post')
+      .where('post.id = :postId', { postId })
+      .leftJoinAndSelect('post.carModel', 'carModel')
+      .leftJoinAndSelect('post.carMake', 'carMake')
+      .leftJoinAndSelect('post.user', 'user')
+      .getOne();
+
+    if (postEntity) {
+      return PostRepository.toPostModel(postEntity);
+    }
   }
 }

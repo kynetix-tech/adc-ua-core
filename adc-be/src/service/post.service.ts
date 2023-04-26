@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fsp from 'fs/promises';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { PostRepository } from '../repository/post.repository';
 import { PostCreateModel, PostViewModel } from '../model/post.model';
 import { PostCreateRequest } from '../dto/request.dto';
@@ -53,6 +53,18 @@ export class PostService {
     return await this.postRepository.createPost(newPostModel);
   }
 
+  public async getPostById(postId: number) {
+    const post = await this.postRepository.getPostById(postId);
+
+    if (!post)
+      throw new PostNotFoundError(
+        `Post with ${postId} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+
+    return post;
+  }
+
   public async upsertImageForPost(
     file: Express.Multer.File,
     userId: string,
@@ -90,3 +102,4 @@ export class PostService {
 }
 
 export class ImageWithIncorrectFormatError extends ApplicationError {}
+export class PostNotFoundError extends ApplicationError {}

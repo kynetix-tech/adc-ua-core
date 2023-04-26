@@ -8,9 +8,9 @@ export const FlexCard = styled(Card)`
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-  max-width: 50vw;
-  margin: 1rem 0;
+  max-width: 70vw;
   background-color: ${({ theme }) => theme.palette.grey['800']};
+  margin: 1rem;
 `;
 
 export const CardMediaImg = styled(CardMedia).attrs({

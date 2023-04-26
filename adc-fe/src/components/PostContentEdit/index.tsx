@@ -1,2 +1,2 @@
-import PostContentView from './PostContentView';
-export default PostContentView;
+import PostContentEdit from './PostContentEdit';
+export default PostContentEdit;

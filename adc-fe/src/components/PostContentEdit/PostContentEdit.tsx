@@ -1,9 +1,11 @@
+import 'react-markdown-editor-lite/lib/index.css';
+
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Menu } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import MarkdownIt from 'markdown-it';
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { Entity } from '../../interface/api-interface';
@@ -16,8 +18,8 @@ import {
   Image,
   ItemContainer,
   Label,
-  PostContentTextField,
-} from './PostContentView.style';
+  MarkdownEditorStyled,
+} from './PostContentEdit.style';
 
 const MEDIA_PATH = import.meta.env.VITE_APP_MEDIA_PATH;
 
@@ -26,7 +28,9 @@ export interface PostContentViewProps {
   setContent: React.Dispatch<React.SetStateAction<ContentItem[]>>;
 }
 
-export default function PostContentView({ content, setContent }: PostContentViewProps) {
+const mdParser = new MarkdownIt(/* Markdown-it options */);
+
+export default function PostContentEdit({ content, setContent }: PostContentViewProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const queryClient = useQueryClient();
@@ -68,16 +72,15 @@ export default function PostContentView({ content, setContent }: PostContentView
       {content.map((item, key) => (
         <ItemContainer key={key}>
           {item.type === ContentTypes.Text ? (
-            <PostContentTextField
-              value={content[key].content}
-              onChange={(event) => {
+            <MarkdownEditorStyled
+              style={{ height: '400px' }}
+              renderHTML={(text: string) => mdParser.render(text)}
+              onChange={({ text }: { text: string }) => {
                 setContent((prevState) => {
-                  prevState[key].content = event.target.value;
+                  prevState[key].content = text;
                   return [...prevState];
                 });
               }}
-              label='Write something'
-              multiline
             />
           ) : (
             <Image alt='' src={item.content} />

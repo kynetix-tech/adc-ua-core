@@ -85,6 +85,23 @@ export class PostService {
 
     /**
      * @param id
+     * @returns PostResponse
+     * @throws ApiError
+     */
+    public static getPostById(
+        id: number,
+    ): CancelablePromise<PostResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/post/{id}',
+            path: {
+                'id': id,
+            },
+        });
+    }
+
+    /**
+     * @param id
      * @returns any
      * @throws ApiError
      */

@@ -3,6 +3,7 @@ import {
   StyledEngineProvider,
   ThemeProvider as MuiThemeProvider,
 } from '@mui/material/styles';
+import Editor, { Plugins } from 'react-markdown-editor-lite';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
@@ -11,6 +12,9 @@ import { OpenAPI } from './service/Api';
 import theme from './themes';
 
 OpenAPI.BASE = import.meta.env.VITE_APP_CORE_URL as string;
+Editor.unuse(Plugins.Image);
+Editor.unuse(Plugins.BlockCodeBlock);
+Editor.unuse(Plugins.BlockCodeInline);
 
 function App() {
   const queryClient = new QueryClient();

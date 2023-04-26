@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 
 import { paths } from '../../App.router';
-import PostContentView from '../../components/PostContentView';
+import PostContentEdit from '../../components/PostContentEdit';
 import { Entity } from '../../interface/api-interface';
 import { AutocompleteOption } from '../../interface/common';
 import { CarSpecificationService, ContentItem, PostService } from '../../service/Api';
@@ -141,7 +141,7 @@ export default function NewPost() {
         </FlexBoxCarSpecify>
 
         <CenteredTextBox>
-          <PostContentView content={content} setContent={setContent} />
+          <PostContentEdit content={content} setContent={setContent} />
           <StyledButton
             onClick={() => {
               createPost(null);

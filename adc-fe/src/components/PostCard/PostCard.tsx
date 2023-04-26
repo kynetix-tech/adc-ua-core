@@ -10,7 +10,10 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import React from 'react';
+import { useNavigate } from 'react-router';
 
+import { paths } from '../../App.router';
+import { TEXT_PREVIEW_MAX_LEN } from '../../common/const';
 import { ContentTypes } from '../../interface/common';
 import { PostResponse } from '../../service/Api';
 import {
@@ -26,10 +29,9 @@ export interface PostCardProps {
   admin: boolean;
 }
 
-export const TEXT_PREVIEW_MAX_LEN = 300;
-
 export default function PostCard({ post, admin }: PostCardProps) {
   const contentPreviewImg = post.content.find((item) => item.type === ContentTypes.Img);
+  const navigate = useNavigate();
 
   const cardMediaPreview = contentPreviewImg
     ? contentPreviewImg.content
@@ -42,7 +44,11 @@ export default function PostCard({ post, admin }: PostCardProps) {
   const postLastTime = new Date(post.updatedAt ? post.updatedAt : post.createdAt);
 
   return (
-    <FlexCard>
+    <FlexCard
+      onClick={() =>
+        navigate(path.join(paths.post.root, paths.post.view.root, `${post.id}`))
+      }
+    >
       <CardContentRel>
         <Stack direction='row' gap={1}>
           <PersonIcon />
@@ -54,21 +60,21 @@ export default function PostCard({ post, admin }: PostCardProps) {
         <Divider />
 
         <CardTextBox>
-          <Typography variant='h5'>{post.title}</Typography>
+          <Typography variant='h4'>{post.title}</Typography>
           <Typography variant='subtitle1'>
             {postContentTextPreview?.content.slice(0, TEXT_PREVIEW_MAX_LEN) + '...'}
           </Typography>
         </CardTextBox>
 
         <CardControlsFlexBox>
-          <IconButton>
+          <IconButton onClick={(event) => event.stopPropagation()}>
             <FavoriteBorderIcon />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={(event) => event.stopPropagation()}>
             <ModeCommentOutlinedIcon />
           </IconButton>
           {admin && (
-            <IconButton>
+            <IconButton onClick={(event) => event.stopPropagation()}>
               <EditOutlinedIcon />
             </IconButton>
           )}

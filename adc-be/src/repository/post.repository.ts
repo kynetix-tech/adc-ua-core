@@ -29,12 +29,19 @@ export class PostRepository {
     );
   }
 
-  public async getAllByUserId(userId: string): Promise<PostViewModel[]> {
+  public async getByUserId(
+    userId: string,
+    limit: number,
+    offset: number,
+  ): Promise<PostViewModel[]> {
     const postEntity = await this.repository
       .createQueryBuilder('post')
+      .offset(offset)
+      .limit(limit)
       .leftJoinAndSelect('post.carModel', 'carModel')
       .leftJoinAndSelect('post.carMake', 'carMake')
       .leftJoinAndSelect('post.user', 'user')
+      .orderBy('post.id', 'DESC')
       .where('user_id = :userId', { userId })
       .getMany();
 

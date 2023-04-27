@@ -26,8 +26,12 @@ export class PostService {
     this.saltFileName = this.configService.get<string>('media.fileNameSalt');
   }
 
-  async getAllItemsByUserId(userId: string): Promise<PostViewModel[]> {
-    return await this.postRepository.getAllByUserId(userId);
+  async getItemsByUserId(
+    userId: string,
+    limit: number,
+    offset: number,
+  ): Promise<PostViewModel[]> {
+    return await this.postRepository.getByUserId(userId, limit, offset);
   }
 
   async getNewestPostWithLimit(

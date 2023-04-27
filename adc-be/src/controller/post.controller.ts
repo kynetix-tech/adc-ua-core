@@ -47,11 +47,21 @@ export class PostController {
     private readonly postFormatter: PostFormatter,
   ) {}
 
-  @Get('all/:userId')
+  @Get(':userId')
   @HttpCode(HttpStatus.OK)
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'offset', required: false })
   @ApiResponse({ status: HttpStatus.OK, type: PostResponse, isArray: true })
-  public async getAllByUserId(@Param('userId') userId: string) {
-    const posts = await this.postService.getAllItemsByUserId(userId);
+  public async getAllByUserId(
+    @Param('userId') userId: string,
+    @Query('limit') limit: number = this.DEFAULT_LIMIT,
+    @Query('offset') offset: number = this.DEFAULT_OFFSET,
+  ) {
+    const posts = await this.postService.getItemsByUserId(
+      userId,
+      limit,
+      offset,
+    );
 
     return this.postFormatter.toPostsResponse(posts);
   }

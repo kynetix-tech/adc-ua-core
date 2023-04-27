@@ -47,7 +47,7 @@ export class PostController {
     private readonly postFormatter: PostFormatter,
   ) {}
 
-  @Get(':userId')
+  @Get('user/:userId')
   @HttpCode(HttpStatus.OK)
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'offset', required: false })

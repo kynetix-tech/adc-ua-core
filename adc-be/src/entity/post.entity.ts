@@ -11,6 +11,7 @@ import { UserEntity } from './user.entity';
 import { CommentEntity } from './comment.entity';
 import { CarMakeEntity } from './car-make.entity';
 import { CarModelEntity } from './car-model.entity';
+import { LikeEntity } from './like.entity';
 
 export interface ContentItem {
   type: 'text' | 'img';
@@ -47,12 +48,6 @@ export class PostEntity {
     nullable: true,
   })
   content: Array<ContentItem>;
-
-  @Column({
-    type: 'integer',
-    default: 0,
-  })
-  likes: number;
 
   @Column({
     type: 'integer',
@@ -94,4 +89,7 @@ export class PostEntity {
 
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   comments: CommentEntity[];
+
+  @OneToMany(() => LikeEntity, (like) => like.post)
+  likes: LikeEntity[];
 }

@@ -21,12 +21,6 @@ export class CommentEntity {
   })
   replyID: number;
 
-  @Column({
-    type: 'integer',
-    default: 0,
-  })
-  likes: number;
-
   @CreateDateColumn({
     nullable: false,
     name: 'created_at',

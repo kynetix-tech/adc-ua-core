@@ -4,11 +4,13 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { PostEntity } from './post.entity';
 import { UserEntity } from './user.entity';
 
 @Entity('like')
+@Unique(['postId', 'userId'])
 export class LikeEntity {
   @PrimaryGeneratedColumn()
   id: number;

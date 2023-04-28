@@ -35,3 +35,8 @@ export class PostCreateUpdateRequest {
   @ApiProperty({ required: false, type: Number })
   id = 0;
 }
+
+export class LikeRequest {
+  @ApiProperty()
+  postId: number;
+}

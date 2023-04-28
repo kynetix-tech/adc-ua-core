@@ -13,7 +13,6 @@ export class PostViewModel {
     public readonly user: UserModel,
     public readonly createdAt: Date = null,
     public readonly updatedAt: Date = null,
-    public readonly likes: number = 0,
     public readonly id: number = 0,
   ) {}
 }

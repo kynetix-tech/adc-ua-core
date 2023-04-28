@@ -71,9 +71,6 @@ export class PostResponse {
   updatedAt: Date;
 
   @ApiProperty()
-  likes: number;
-
-  @ApiProperty()
   id: number;
 }
 
@@ -85,4 +82,15 @@ export class PostCreateUpdateResponse {
 export class ImageUploadResponse {
   @ApiProperty()
   filename: string;
+}
+
+export class LikeResponse {
+  @ApiProperty()
+  userId: string;
+
+  @ApiProperty()
+  postId: number;
+
+  @ApiProperty()
+  id: number;
 }

@@ -10,6 +10,7 @@ import { UserModule } from './user.module';
 import { CarSpecificationModule } from './car-specification.module';
 import { PostModule } from './post.module';
 import { PublicStaticModule } from './public-static.module';
+import { LikeCommentManagingModule } from './like-comment-managing.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PublicStaticModule } from './public-static.module';
     CarSpecificationModule,
     PostModule,
     PublicStaticModule,
+    LikeCommentManagingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

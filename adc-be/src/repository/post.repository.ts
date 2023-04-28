@@ -24,7 +24,6 @@ export class PostRepository {
       UserRepository.toUserModel(post.user),
       post.createdAt,
       post.updatedAt,
-      post.likes,
       post.id,
     );
   }

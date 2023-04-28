@@ -27,7 +27,6 @@ export class PostFormatter {
       user: this.userFormatter.toUserResponse(post.user),
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
-      likes: post.likes,
       id: post.id,
     };
   }

@@ -77,6 +77,7 @@ export class PostRepository {
         carMakeId: post.carMakeId,
         carModelId: post.carModelId,
         userId: post.userId,
+        updatedAt: new Date(),
       })
       .where('id = :postId', { postId: post.id })
       .execute();

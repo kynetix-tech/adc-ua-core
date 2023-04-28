@@ -18,7 +18,7 @@ export class PostViewModel {
   ) {}
 }
 
-export class PostCreateModel {
+export class PostCreateUpdateModel {
   constructor(
     public readonly title: string,
     public readonly content: Array<ContentItem>,
@@ -26,5 +26,6 @@ export class PostCreateModel {
     public readonly carMakeId: number,
     public readonly carModelId: number,
     public readonly userId: string,
+    public readonly id: number = 0,
   ) {}
 }

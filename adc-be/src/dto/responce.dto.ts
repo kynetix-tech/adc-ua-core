@@ -77,7 +77,7 @@ export class PostResponse {
   id: number;
 }
 
-export class PostCreationResponse {
+export class PostCreateUpdateResponse {
   @ApiProperty()
   postId: number;
 }

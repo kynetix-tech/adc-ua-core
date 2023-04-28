@@ -1,16 +1,15 @@
 import * as path from 'path';
+import { extname } from 'path';
 import * as fsp from 'fs/promises';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { PostRepository } from '../repository/post.repository';
-import { PostCreateModel, PostViewModel } from '../model/post.model';
-import { PostCreateRequest } from '../dto/request.dto';
+import { PostCreateUpdateModel, PostViewModel } from '../model/post.model';
+import { PostCreateUpdateRequest } from '../dto/request.dto';
 import { generateChecksum, hashFileNameWithSalt } from '../common/util';
 import { CheckSumRepository } from '../repository/check-sum-repository.service';
 import { CheckSumModel } from '../model/checkSumModel';
 import { ConfigService } from '@nestjs/config';
-import { extname } from 'path';
 import { ApplicationError } from '../common/aplication.error';
-import { of } from 'rxjs';
 
 @Injectable()
 export class PostService {
@@ -26,7 +25,22 @@ export class PostService {
     this.saltFileName = this.configService.get<string>('media.fileNameSalt');
   }
 
-  async getItemsByUserId(
+  private createPostModelFromBody(
+    post: PostCreateUpdateRequest,
+    userId: string,
+  ): PostCreateUpdateModel {
+    return new PostCreateUpdateModel(
+      post.title,
+      post.content,
+      post.carYear,
+      post.carMakeId,
+      post.carModelId,
+      userId,
+      post.id,
+    );
+  }
+
+  public async getItemsByUserId(
     userId: string,
     limit: number,
     offset: number,
@@ -34,25 +48,18 @@ export class PostService {
     return await this.postRepository.getByUserId(userId, limit, offset);
   }
 
-  async getNewestPostWithLimit(
+  public async getNewestPostWithLimit(
     limit: number,
     offset: number,
   ): Promise<PostViewModel[]> {
     return await this.postRepository.getNewestPosts(limit, offset);
   }
 
-  async createNewPost(
-    post: PostCreateRequest,
+  public async createNewPost(
+    post: PostCreateUpdateRequest,
     userId: string,
   ): Promise<number> {
-    const newPostModel = new PostCreateModel(
-      post.title,
-      post.content,
-      post.carYear,
-      post.carMakeId,
-      post.carModelId,
-      userId,
-    );
+    const newPostModel = this.createPostModelFromBody(post, userId);
 
     return await this.postRepository.createPost(newPostModel);
   }
@@ -67,6 +74,21 @@ export class PostService {
       );
 
     return post;
+  }
+
+  public async updatePostById(post: PostCreateUpdateRequest, userId: string) {
+    const oldPost = await this.getPostById(post.id);
+
+    if (oldPost.user.id !== userId) {
+      throw new PostEditPermissionDenied(
+        'User has no right to edit a post that is not his own, permission denied',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const updatePostModel = this.createPostModelFromBody(post, userId);
+
+    return await this.postRepository.updatePost(updatePostModel);
   }
 
   public async upsertImageForPost(
@@ -107,3 +129,4 @@ export class PostService {
 
 export class ImageWithIncorrectFormatError extends ApplicationError {}
 export class PostNotFoundError extends ApplicationError {}
+export class PostEditPermissionDenied extends ApplicationError {}

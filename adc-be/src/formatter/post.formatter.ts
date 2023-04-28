@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PostViewModel } from '../model/post.model';
 import {
   ImageUploadResponse,
-  PostCreationResponse,
+  PostCreateUpdateResponse,
   PostResponse,
 } from '../dto/responce.dto';
 import { CarSpecificationFormatter } from './car-specification.formatter';
@@ -36,7 +36,7 @@ export class PostFormatter {
     return posts.map(this.toPostResponse.bind(this));
   }
 
-  public toPostCreationResponse(postId: number): PostCreationResponse {
+  public toPostCreateUpdateResponse(postId: number): PostCreateUpdateResponse {
     return { postId };
   }
 

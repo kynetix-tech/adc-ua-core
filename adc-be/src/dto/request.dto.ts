@@ -16,7 +16,7 @@ export class UserRegisterRequest {
   gender: Gender;
 }
 
-export class PostCreateRequest {
+export class PostCreateUpdateRequest {
   @ApiProperty()
   title: string;
 
@@ -31,4 +31,7 @@ export class PostCreateRequest {
 
   @ApiProperty()
   carModelId: number;
+
+  @ApiProperty({ required: false, type: Number })
+  id = 0;
 }

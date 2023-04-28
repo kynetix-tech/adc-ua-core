@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
   Req,
   UploadedFile,
@@ -26,11 +27,11 @@ import { PostService } from '../service/post.service';
 import { PostFormatter } from '../formatter/post.formatter';
 import {
   ImageUploadResponse,
-  PostCreationResponse,
+  PostCreateUpdateResponse,
   PostResponse,
 } from '../dto/responce.dto';
 import { RequestWithAuth } from '../types/interfaces';
-import { PostCreateRequest } from '../dto/request.dto';
+import { PostCreateUpdateRequest } from '../dto/request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadFileSchema } from '../common/shemas/shemas';
 
@@ -68,15 +69,15 @@ export class PostController {
 
   @Post('new')
   @HttpCode(HttpStatus.CREATED)
-  @ApiResponse({ status: HttpStatus.CREATED, type: PostCreationResponse })
+  @ApiResponse({ status: HttpStatus.CREATED, type: PostCreateUpdateResponse })
   public async createPost(
     @Req() { user }: RequestWithAuth,
-    @Body() body: PostCreateRequest,
-  ): Promise<PostCreationResponse> {
+    @Body() body: PostCreateUpdateRequest,
+  ): Promise<PostCreateUpdateResponse> {
     const { auth0Id } = user;
     const newPostId = await this.postService.createNewPost(body, auth0Id);
 
-    return this.postFormatter.toPostCreationResponse(newPostId);
+    return this.postFormatter.toPostCreateUpdateResponse(newPostId);
   }
 
   @Post('upload-image')
@@ -116,6 +117,19 @@ export class PostController {
     const post = await this.postService.getPostById(id);
 
     return this.postFormatter.toPostResponse(post);
+  }
+
+  @Put('update')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: HttpStatus.CREATED, type: PostCreateUpdateResponse })
+  public async updatePost(
+    @Req() { user }: RequestWithAuth,
+    @Body() body: PostCreateUpdateRequest,
+  ): Promise<PostCreateUpdateResponse> {
+    const { auth0Id } = user;
+    const updatePostId = await this.postService.updatePostById(body, auth0Id);
+
+    return this.postFormatter.toPostCreateUpdateResponse(updatePostId);
   }
 
   @Delete(':id')

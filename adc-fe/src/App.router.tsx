@@ -8,8 +8,9 @@ import { NavbarContainerWrapper } from './components/NavContainerWrapper';
 import { useApiTokenResolver } from './hooks/aunthefication/useApiTokenResolver';
 
 const LazyLogin = lazy(() => import('./pages/IntroLogin'));
-const LazyHome = lazy(() => import('./pages/Home'));
-const LazyNewPost = lazy(() => import('./pages/NewPost'));
+const LazyHome = lazy(() => import('./pages/PostList'));
+const LazyCreatePost = lazy(() => import('./pages/PostCreateEdit'));
+const LazyEditPost = lazy(() => import('./pages/PostEditWrapper'));
 const LazyPostView = lazy(() => import('./pages/PostView'));
 
 enum PermissionType {
@@ -32,6 +33,7 @@ export const paths = {
   post: {
     root: 'post',
     new: 'new',
+    edit: { root: 'edit', param: 'postId' },
     view: { root: 'view', param: 'postId' },
   },
 };
@@ -52,10 +54,14 @@ const routes: RoutesConfig[] = [
     path: paths.post.root,
     element: <NavbarContainerWrapper />,
     children: [
-      { path: paths.post.new, element: <LazyNewPost /> },
+      { path: paths.post.new, element: <LazyCreatePost /> },
       {
         path: `${paths.post.view.root}/:${paths.post.view.param}`,
         element: <LazyPostView />,
+      },
+      {
+        path: `${paths.post.edit.root}/:${paths.post.edit.param}`,
+        element: <LazyEditPost />,
       },
     ],
   },

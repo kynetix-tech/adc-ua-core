@@ -43,3 +43,8 @@ export const StyledButton = styled(Button).attrs({
     background-color: ${({ theme }) => theme.palette.grey[700]};
   }
 `;
+
+export const PostImage = styled.img`
+  max-width: 45vw;
+  max-height: 60vh;
+`;

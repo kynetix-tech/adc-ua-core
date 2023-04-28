@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { Navigate } from 'react-router';
 
+import { paths } from '../../App.router';
 import logo from '../../assets/logos/ADC_ animated.gif';
 import { AnimatedText } from '../../components/AnimatedText';
 import UserRegisterInfoForm from '../../components/UserRegisterInfoForm';
@@ -38,7 +39,7 @@ export default function IntroLogin() {
 
   return (
     <>
-      {isRegisterUser && <Navigate to={'/'} />}
+      {isRegisterUser && <Navigate to={paths.default} />}
       {isOnlyAuth0User ? (
         <CenteredContainer>
           <UserRegisterInfoForm />

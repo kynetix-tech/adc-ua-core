@@ -1,2 +1,2 @@
-import NewPost from './NewPost';
-export default NewPost;
+import PostCreateEdit from './PostCreateEdit';
+export default PostCreateEdit;

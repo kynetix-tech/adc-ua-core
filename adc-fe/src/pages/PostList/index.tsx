@@ -1,2 +1,2 @@
-import Home from './Home';
-export default Home;
+import PostList from './PostList';
+export default PostList;

@@ -7,15 +7,15 @@ import MenuItem from '@mui/material/MenuItem';
 import MarkdownIt from 'markdown-it';
 import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { text } from 'stream/consumers';
 
 import { Entity } from '../../interface/api-interface';
 import { ContentTypes } from '../../interface/common';
 import { ContentItem, PostService } from '../../service/Api';
-import { StyledButton } from '../../styled-global/global-styled-components';
+import { PostImage, StyledButton } from '../../styled-global/global-styled-components';
 import {
   AbsoluteIconButton,
   ContentDivider,
-  Image,
   ItemContainer,
   Label,
   MarkdownEditorStyled,
@@ -73,6 +73,7 @@ export default function PostContentEdit({ content, setContent }: PostContentView
         <ItemContainer key={key}>
           {item.type === ContentTypes.Text ? (
             <MarkdownEditorStyled
+              value={item.content}
               style={{ height: '400px' }}
               renderHTML={(text: string) => mdParser.render(text)}
               onChange={({ text }: { text: string }) => {
@@ -83,7 +84,7 @@ export default function PostContentEdit({ content, setContent }: PostContentView
               }}
             />
           ) : (
-            <Image alt='' src={item.content} />
+            <PostImage alt='' src={item.content} />
           )}
           <AbsoluteIconButton
             onClick={() =>

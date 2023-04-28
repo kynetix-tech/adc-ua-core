@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ImageUploadResponse } from '../models/ImageUploadResponse';
-import type { PostCreateRequest } from '../models/PostCreateRequest';
-import type { PostCreationResponse } from '../models/PostCreationResponse';
+import type { PostCreateUpdateRequest } from '../models/PostCreateUpdateRequest';
+import type { PostCreateUpdateResponse } from '../models/PostCreateUpdateResponse';
 import type { PostResponse } from '../models/PostResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -14,29 +14,37 @@ export class PostService {
 
     /**
      * @param userId
+     * @param limit
+     * @param offset
      * @returns PostResponse
      * @throws ApiError
      */
     public static getAllByUserId(
         userId: string,
+        limit?: number,
+        offset?: number,
     ): CancelablePromise<Array<PostResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/post/all/{userId}',
+            url: '/post/user/{userId}',
             path: {
                 'userId': userId,
+            },
+            query: {
+                'limit': limit,
+                'offset': offset,
             },
         });
     }
 
     /**
      * @param requestBody
-     * @returns PostCreationResponse
+     * @returns PostCreateUpdateResponse
      * @throws ApiError
      */
     public static createPost(
-        requestBody: PostCreateRequest,
-    ): CancelablePromise<PostCreationResponse> {
+        requestBody: PostCreateUpdateRequest,
+    ): CancelablePromise<PostCreateUpdateResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/post/new',
@@ -114,6 +122,22 @@ export class PostService {
             path: {
                 'id': id,
             },
+        });
+    }
+
+    /**
+     * @param requestBody
+     * @returns PostCreateUpdateResponse
+     * @throws ApiError
+     */
+    public static updatePost(
+        requestBody: PostCreateUpdateRequest,
+    ): CancelablePromise<PostCreateUpdateResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/post/update',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 

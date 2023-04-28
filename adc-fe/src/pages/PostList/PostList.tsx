@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import LinearProgress from '@mui/material/LinearProgress';
 import Tab from '@mui/material/Tab';
 import React from 'react';
@@ -10,12 +11,13 @@ import { Entity } from '../../interface/api-interface';
 import { TabType } from '../../interface/common';
 import { PostResponse, PostService } from '../../service/Api';
 import { PageContainer } from '../../styled-global/global-styled-components';
-import { ColoredTabs, PostsContainer } from './Home.style';
+import { ColoredTabs, PostsContainer } from './PostList.style';
 
-export default function Home() {
+export default function PostList() {
   const [tabIndex, setTabIndex] = React.useState<TabType>(TabType.Newest);
   const [offset, setOffset] = React.useState<number>(0);
   const [currentPosts, setCurrentPosts] = React.useState<PostResponse[]>([]);
+  const { user } = useAuth0();
 
   const { data: posts, isLoading: isPostsLoading } = useQuery(
     [Entity.PostView, offset],
@@ -47,8 +49,8 @@ export default function Home() {
           dataLength={currentPosts.length}
         >
           {currentPosts.length > 0 &&
-            currentPosts.map((post) => (
-              <PostCard post={post} key={post.id} admin={false} />
+            currentPosts.map((post, key) => (
+              <PostCard post={post} key={key} userSub={user?.sub || ''} />
             ))}
         </InfiniteScroll>
       </PostsContainer>

@@ -35,8 +35,3 @@ export const ContentDivider = styled(Divider)`
 export const Label = styled.label`
   cursor: pointer;
 `;
-
-export const Image = styled.img`
-  max-width: 45vw;
-  max-height: 60vh;
-`;

@@ -9,7 +9,7 @@ import { Stack } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
 import { paths } from '../../App.router';
@@ -26,10 +26,10 @@ import {
 
 export interface PostCardProps {
   post: PostResponse;
-  admin: boolean;
+  userSub: string;
 }
 
-export default function PostCard({ post, admin }: PostCardProps) {
+export default function PostCard({ post, userSub }: PostCardProps) {
   const contentPreviewImg = post.content.find((item) => item.type === ContentTypes.Img);
   const navigate = useNavigate();
 
@@ -41,7 +41,11 @@ export default function PostCard({ post, admin }: PostCardProps) {
     (item) => item.type === ContentTypes.Text,
   );
 
-  const postLastTime = new Date(post.updatedAt ? post.updatedAt : post.createdAt);
+  const postLastTime = useMemo(
+    () => new Date(post.updatedAt ? post.updatedAt : post.createdAt),
+    [post],
+  );
+  const isOwner = useMemo(() => userSub === post.user.id, [userSub, post]);
 
   return (
     <FlexCard
@@ -73,7 +77,7 @@ export default function PostCard({ post, admin }: PostCardProps) {
           <IconButton onClick={(event) => event.stopPropagation()}>
             <ModeCommentOutlinedIcon />
           </IconButton>
-          {admin && (
+          {isOwner && (
             <IconButton onClick={(event) => event.stopPropagation()}>
               <EditOutlinedIcon />
             </IconButton>

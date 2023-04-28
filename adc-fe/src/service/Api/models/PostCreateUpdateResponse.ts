@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type PostCreationResponse = {
+export type PostCreateUpdateResponse = {
     postId: number;
 };
 

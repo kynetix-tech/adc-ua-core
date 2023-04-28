@@ -4,11 +4,12 @@
 
 import type { ContentItem } from './ContentItem';
 
-export type PostCreateRequest = {
+export type PostCreateUpdateRequest = {
     title: string;
     content: Array<ContentItem>;
     carYear: number;
     carMakeId: number;
     carModelId: number;
+    id?: number;
 };
 

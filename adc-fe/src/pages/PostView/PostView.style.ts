@@ -17,3 +17,11 @@ export const IconAbsoluteContainer = styled(Box)`
   left: -2rem;
   top: 0.2rem;
 `;
+
+export const ItemContainer = styled(Box)`
+  margin-top: 1rem;
+`;
+
+export const PostViewContainer = styled(Box)`
+  padding: 0 1rem;
+`;

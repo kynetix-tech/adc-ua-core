@@ -42,6 +42,7 @@ export class PostRepository {
       .leftJoinAndSelect('post.carModel', 'carModel')
       .leftJoinAndSelect('post.carMake', 'carMake')
       .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.likes', 'likes')
       .orderBy('post.id', 'DESC')
       .where('user_id = :userId', { userId })
       .getMany();
@@ -111,6 +112,7 @@ export class PostRepository {
       .leftJoinAndSelect('post.carModel', 'carModel')
       .leftJoinAndSelect('post.carMake', 'carMake')
       .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.likes', 'likes')
       .getOne();
 
     if (postEntity) {

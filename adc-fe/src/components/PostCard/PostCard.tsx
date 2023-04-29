@@ -1,8 +1,9 @@
 import path from 'node:path';
 
+import { useAuth0 } from '@auth0/auth0-react';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
 import { Stack } from '@mui/material';
@@ -15,7 +16,8 @@ import { useNavigate } from 'react-router';
 import { paths } from '../../App.router';
 import { TEXT_PREVIEW_MAX_LEN } from '../../common/const';
 import { ContentTypes } from '../../interface/common';
-import { PostResponse } from '../../service/Api';
+import { LikeCommentManageService, PostResponse } from '../../service/Api';
+import { StyledButton } from '../../styled-global/global-styled-components';
 import {
   CardContentRel,
   CardControlsFlexBox,
@@ -27,11 +29,13 @@ import {
 export interface PostCardProps {
   post: PostResponse;
   userSub: string;
+  togglePostLike: (postId: number) => void;
 }
 
-export default function PostCard({ post, userSub }: PostCardProps) {
+export default function PostCard({ post, userSub, togglePostLike }: PostCardProps) {
   const contentPreviewImg = post.content.find((item) => item.type === ContentTypes.Img);
   const navigate = useNavigate();
+  const { user } = useAuth0();
 
   const cardMediaPreview = contentPreviewImg
     ? contentPreviewImg.content
@@ -71,14 +75,29 @@ export default function PostCard({ post, userSub }: PostCardProps) {
         </CardTextBox>
 
         <CardControlsFlexBox>
-          <IconButton onClick={(event) => event.stopPropagation()}>
-            <FavoriteBorderIcon />
-          </IconButton>
-          <IconButton onClick={(event) => event.stopPropagation()}>
-            <ModeCommentOutlinedIcon />
-          </IconButton>
+          <StyledButton
+            onClick={(event) => {
+              event.stopPropagation();
+              togglePostLike(post.id);
+            }}
+            startIcon={
+              post.likes.find((item) => item.userId === user?.sub) ? (
+                <FavoriteIcon />
+              ) : (
+                <FavoriteBorderIcon />
+              )
+            }
+          >
+            {post.likes.length}
+          </StyledButton>
+
           {isOwner && (
-            <IconButton onClick={(event) => event.stopPropagation()}>
+            <IconButton
+              onClick={(event) => {
+                event.stopPropagation();
+                navigate(path.join(paths.post.root, paths.post.edit.root, `${post.id}`));
+              }}
+            >
               <EditOutlinedIcon />
             </IconButton>
           )}

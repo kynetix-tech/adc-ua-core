@@ -10,4 +10,5 @@ export enum Entity {
   CarModel = 'CarModel',
   PostContent = 'PostContent',
   PostView = 'PostView',
+  Like = 'Like',
 }

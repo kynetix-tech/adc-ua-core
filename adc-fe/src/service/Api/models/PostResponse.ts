@@ -5,6 +5,7 @@
 import type { CarMakeResponse } from './CarMakeResponse';
 import type { CarModelResponse } from './CarModelResponse';
 import type { ContentItem } from './ContentItem';
+import type { LikeResponse } from './LikeResponse';
 import type { UserResponse } from './UserResponse';
 
 export type PostResponse = {
@@ -14,9 +15,9 @@ export type PostResponse = {
     carMake: CarMakeResponse;
     carModel: CarModelResponse;
     user: UserResponse;
+    likes: Array<LikeResponse>;
     createdAt: string;
     updatedAt: string;
-    likes: number;
     id: number;
 };
 

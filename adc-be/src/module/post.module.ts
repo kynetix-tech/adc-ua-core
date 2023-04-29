@@ -7,6 +7,7 @@ import { CarSpecificationFormatter } from '../formatter/car-specification.format
 import { UserFormatter } from '../formatter/user.formatter';
 import { MulterModule } from '@nestjs/platform-express';
 import { CheckSumRepository } from '../repository/check-sum-repository.service';
+import { LikeCommentManagingFormatter } from '../formatter/like-comment-managing.formatter';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CheckSumRepository } from '../repository/check-sum-repository.service';
     PostFormatter,
     CarSpecificationFormatter,
     UserFormatter,
+    LikeCommentManagingFormatter,
   ],
 })
 export class PostModule {}

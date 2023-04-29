@@ -26,7 +26,7 @@ export class LikeCommentManagingController {
     public readonly likeCommentManagingFormatter: LikeCommentManagingFormatter,
   ) {}
 
-  @Post()
+  @Post('like')
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({ status: HttpStatus.CREATED, type: LikeResponse })
   public async addLike(
@@ -41,7 +41,7 @@ export class LikeCommentManagingController {
     return this.likeCommentManagingFormatter.toLikeResponse(likeResponse);
   }
 
-  @Delete()
+  @Delete('like')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   public async deleteLike(

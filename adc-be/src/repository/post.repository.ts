@@ -5,6 +5,7 @@ import { PostCreateUpdateModel, PostViewModel } from '../model/post.model';
 import { CarMakeRepository } from './car-make.repository';
 import { CarModelRepository } from './car-model.repository';
 import { UserRepository } from './user.repository';
+import { LikeRepository } from './like.repository';
 
 @Injectable()
 export class PostRepository {
@@ -22,6 +23,7 @@ export class PostRepository {
       CarMakeRepository.toCarMakeModel(post.carMake),
       CarModelRepository.toCarModelModel(post.carModel),
       UserRepository.toUserModel(post.user),
+      post.likes.map(LikeRepository.toLikeModel),
       post.createdAt,
       post.updatedAt,
       post.id,
@@ -95,6 +97,7 @@ export class PostRepository {
       .leftJoinAndSelect('post.carModel', 'carModel')
       .leftJoinAndSelect('post.carMake', 'carMake')
       .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.likes', 'likes')
       .orderBy('post.id', 'DESC')
       .getMany();
 

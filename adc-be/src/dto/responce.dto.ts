@@ -65,6 +65,9 @@ export class PostResponse {
   user: UserResponse;
 
   @ApiProperty()
+  likes: LikeResponse[];
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

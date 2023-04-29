@@ -45,6 +45,17 @@ export class ContentItem {
   content: string;
 }
 
+export class LikeResponse {
+  @ApiProperty()
+  userId: string;
+
+  @ApiProperty()
+  postId: number;
+
+  @ApiProperty()
+  id: number;
+}
+
 export class PostResponse {
   @ApiProperty()
   title: string;
@@ -64,8 +75,8 @@ export class PostResponse {
   @ApiProperty()
   user: UserResponse;
 
-  @ApiProperty()
-  likes: LikeResponse[];
+  @ApiProperty({ isArray: true, type: LikeResponse })
+  likes: Array<LikeResponse>;
 
   @ApiProperty()
   createdAt: Date;
@@ -85,15 +96,4 @@ export class PostCreateUpdateResponse {
 export class ImageUploadResponse {
   @ApiProperty()
   filename: string;
-}
-
-export class LikeResponse {
-  @ApiProperty()
-  userId: string;
-
-  @ApiProperty()
-  postId: number;
-
-  @ApiProperty()
-  id: number;
 }

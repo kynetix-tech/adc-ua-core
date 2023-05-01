@@ -1,15 +1,8 @@
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
 import MdEditor from 'react-markdown-editor-lite';
 import styled from 'styled-components';
-
-export const PostContentTextField = styled(TextField).attrs({
-  variant: 'standard',
-})`
-  min-width: 80%;
-`;
 
 export const ItemContainer = styled(Box)`
   position: relative;

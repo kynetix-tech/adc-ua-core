@@ -8,6 +8,10 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { CarMakeResponse } from './models/CarMakeResponse';
 export type { CarModelResponse } from './models/CarModelResponse';
+export type { CommentCreateResponse } from './models/CommentCreateResponse';
+export type { CommentDeleteRequest } from './models/CommentDeleteRequest';
+export type { CommentGetCreateRequest } from './models/CommentGetCreateRequest';
+export type { CommentViewResponse } from './models/CommentViewResponse';
 export type { ContentItem } from './models/ContentItem';
 export type { ImageUploadResponse } from './models/ImageUploadResponse';
 export type { LikeRequest } from './models/LikeRequest';

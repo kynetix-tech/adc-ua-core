@@ -11,6 +11,7 @@ import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router';
 
 import { paths } from '../../App.router';
+import CommentSection from '../../components/CommentsSection';
 import { Entity } from '../../interface/api-interface';
 import { ContentTypes } from '../../interface/common';
 import { PostService } from '../../service/Api';
@@ -36,8 +37,6 @@ export default function PostView() {
     () => PostService.getPostById(parseInt(postId || '0')),
     { onError: console.log, refetchOnWindowFocus: false },
   );
-
-  console.log(post);
 
   return (
     <PageContainer>
@@ -84,6 +83,10 @@ export default function PostView() {
             </ItemContainer>
           ))}
       </PostViewContainer>
+
+      <Divider />
+
+      {post && <CommentSection post={post} />}
     </PageContainer>
   );
 }

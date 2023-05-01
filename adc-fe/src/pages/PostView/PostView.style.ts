@@ -24,4 +24,5 @@ export const ItemContainer = styled(Box)`
 
 export const PostViewContainer = styled(Box)`
   padding: 0 1rem;
+  margin-bottom: 2rem;
 `;

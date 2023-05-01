@@ -12,6 +12,7 @@ import { OpenAPI } from './service/Api';
 import theme from './themes';
 
 OpenAPI.BASE = import.meta.env.VITE_APP_CORE_URL as string;
+
 Editor.unuse(Plugins.Image);
 Editor.unuse(Plugins.BlockCodeBlock);
 Editor.unuse(Plugins.BlockCodeInline);

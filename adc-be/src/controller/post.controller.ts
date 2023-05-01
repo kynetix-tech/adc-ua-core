@@ -34,15 +34,13 @@ import { RequestWithAuth } from '../types/interfaces';
 import { PostCreateUpdateRequest } from '../dto/request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadFileSchema } from '../common/shemas/shemas';
+import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
 
 @ApiTags('Post')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('authorization')
 @Controller('post')
 export class PostController {
-  private readonly DEFAULT_LIMIT = 40;
-  private readonly DEFAULT_OFFSET = 0;
-
   constructor(
     private readonly postService: PostService,
     private readonly postFormatter: PostFormatter,
@@ -55,8 +53,8 @@ export class PostController {
   @ApiResponse({ status: HttpStatus.OK, type: PostResponse, isArray: true })
   public async getAllByUserId(
     @Param('userId') userId: string,
-    @Query('limit') limit: number = this.DEFAULT_LIMIT,
-    @Query('offset') offset: number = this.DEFAULT_OFFSET,
+    @Query('limit') limit: number = DEFAULT_LIMIT,
+    @Query('offset') offset: number = DEFAULT_OFFSET,
   ) {
     const posts = await this.postService.getItemsByUserId(
       userId,
@@ -102,8 +100,8 @@ export class PostController {
   @ApiQuery({ name: 'offset', required: false })
   @ApiResponse({ status: HttpStatus.OK, type: PostResponse, isArray: true })
   public async getNewest(
-    @Query('limit') limit: number = this.DEFAULT_LIMIT,
-    @Query('offset') offset: number = this.DEFAULT_OFFSET,
+    @Query('limit') limit: number = DEFAULT_LIMIT,
+    @Query('offset') offset: number = DEFAULT_OFFSET,
   ): Promise<PostResponse[]> {
     const posts = await this.postService.getNewestPostWithLimit(limit, offset);
 

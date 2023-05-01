@@ -2,19 +2,31 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { LikeResponse } from '../dto/responce.dto';
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  CommentCreateResponse,
+  CommentViewResponse,
+  LikeResponse,
+} from '../dto/responce.dto';
 import { RequestWithAuth } from '../types/interfaces';
-import { LikeRequest } from '../dto/request.dto';
+import {
+  CommentGetCreateRequest,
+  CommentDeleteRequest,
+  LikeRequest,
+} from '../dto/request.dto';
 import { LikeCommentManagingService } from '../service/like-comment-managing.service';
 import { LikeCommentManagingFormatter } from '../formatter/like-comment-managing.formatter';
 import { AuthGuard } from '@nestjs/passport';
+import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
 
 @Controller('like-comment-manage')
 @UseGuards(AuthGuard('jwt'))
@@ -47,7 +59,53 @@ export class LikeCommentManagingController {
   public async deleteLike(
     @Req() { user }: RequestWithAuth,
     @Body() body: LikeRequest,
-  ) {
+  ): Promise<void> {
     return await this.likeCommentManagingService.deleteLike(body, user.auth0Id);
+  }
+
+  @Post('comment')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({ status: HttpStatus.CREATED, type: CommentCreateResponse })
+  public async createComment(
+    @Req() { user }: RequestWithAuth,
+    @Body() body: CommentGetCreateRequest,
+  ): Promise<CommentCreateResponse> {
+    const commentId = await this.likeCommentManagingService.createComment(
+      body,
+      user.auth0Id,
+    );
+
+    return this.likeCommentManagingFormatter.toCommentCreateResponce(commentId);
+  }
+
+  @Delete('comment')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  public async deleteComment(@Body() body: CommentDeleteRequest) {
+    return this.likeCommentManagingService.deleteComment(body);
+  }
+
+  @Get('comment/newest')
+  @HttpCode(HttpStatus.OK)
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'offset', required: false })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: CommentViewResponse,
+    isArray: true,
+  })
+  public async getNewestComments(
+    @Param('postId') postId: number,
+    @Query('limit') limit: number = DEFAULT_LIMIT,
+    @Query('offset') offset: number = DEFAULT_OFFSET,
+  ): Promise<CommentViewResponse[]> {
+    const comments =
+      await this.likeCommentManagingService.getNewestCommentsWithLimit(
+        postId,
+        limit,
+        offset,
+      );
+
+    return this.likeCommentManagingFormatter.toCommentsViewResponse(comments);
   }
 }

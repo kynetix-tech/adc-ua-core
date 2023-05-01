@@ -15,12 +15,6 @@ export class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: 'integer',
-    nullable: true,
-  })
-  replyID: number;
-
   @CreateDateColumn({
     nullable: false,
     name: 'created_at',
@@ -32,11 +26,21 @@ export class CommentEntity {
   })
   text: string;
 
+  @Column({
+    name: 'post_id',
+  })
+  postId: number;
+
+  @Column({
+    name: 'user_id',
+  })
+  userId: string;
+
   @ManyToOne(() => PostEntity, (post) => post.comments)
   @JoinColumn({ name: 'post_id' })
   post: PostEntity;
 
-  @OneToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 }

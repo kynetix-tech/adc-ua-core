@@ -3,6 +3,8 @@ import { LikeCommentManagingController } from '../controller/like-comment-managi
 import { LikeCommentManagingService } from '../service/like-comment-managing.service';
 import { LikeRepository } from '../repository/like.repository';
 import { LikeCommentManagingFormatter } from '../formatter/like-comment-managing.formatter';
+import { CommentRepository } from '../repository/comment.repository';
+import { UserFormatter } from '../formatter/user.formatter';
 
 @Module({
   controllers: [LikeCommentManagingController],
@@ -10,6 +12,8 @@ import { LikeCommentManagingFormatter } from '../formatter/like-comment-managing
     LikeCommentManagingService,
     LikeCommentManagingFormatter,
     LikeRepository,
+    CommentRepository,
+    UserFormatter,
   ],
 })
 export class LikeCommentManagingModule {}

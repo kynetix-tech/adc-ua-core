@@ -97,3 +97,22 @@ export class ImageUploadResponse {
   @ApiProperty()
   filename: string;
 }
+
+export class CommentCreateResponse {
+  @ApiProperty()
+  commentId: number;
+}
+
+export class CommentViewResponse {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  text: string;
+
+  @ApiProperty()
+  postId: number;
+
+  @ApiProperty()
+  user: UserResponse;
+}

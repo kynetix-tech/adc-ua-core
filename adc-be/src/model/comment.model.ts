@@ -12,6 +12,7 @@ export class CommentViewModel {
   constructor(
     public readonly text: string,
     public readonly postId: number,
+    public readonly createdAt: Date,
     public readonly user: UserModel,
     public readonly id: number,
   ) {}

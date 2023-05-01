@@ -33,6 +33,7 @@ export class LikeCommentManagingFormatter {
       id: commentViewModel.id,
       text: commentViewModel.text,
       postId: commentViewModel.postId,
+      createdAt: commentViewModel.createdAt,
       user: this.userFormatter.toUserResponse(commentViewModel.user),
     };
   }

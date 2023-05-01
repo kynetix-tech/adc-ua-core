@@ -18,6 +18,7 @@ export class CommentRepository {
     return new CommentViewModel(
       commentEntity.text,
       commentEntity.postId,
+      commentEntity.createdAt,
       UserRepository.toUserModel(commentEntity.user),
       commentEntity.id,
     );

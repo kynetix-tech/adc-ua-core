@@ -114,5 +114,8 @@ export class CommentViewResponse {
   postId: number;
 
   @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
   user: UserResponse;
 }

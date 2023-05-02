@@ -26,6 +26,7 @@ export default function PostList() {
     {
       onError: useNotificationOnError(),
       onSuccess: (posts) => setCurrentPosts((prevPosts) => [...prevPosts, ...posts]),
+      refetchOnWindowFocus: false,
     },
   );
 

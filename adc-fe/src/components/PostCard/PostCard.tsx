@@ -6,17 +6,18 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PersonIcon from '@mui/icons-material/Person';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
-import { Stack } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router';
+import TimeAgo from 'timeago-react';
 
 import { paths } from '../../App.router';
 import { TEXT_PREVIEW_MAX_LEN } from '../../common/const';
 import { ContentTypes } from '../../interface/common';
-import { LikeCommentManageService, PostResponse } from '../../service/Api';
+import { PostResponse } from '../../service/Api';
 import { StyledButton } from '../../styled-global/global-styled-components';
 import {
   CardContentRel,
@@ -62,7 +63,14 @@ export default function PostCard({ post, userSub, togglePostLike }: PostCardProp
           <PersonIcon />
           <Typography variant='h6'>{`${post.user.lastName} ${post.user.firstName}`}</Typography>
           <QueryBuilderIcon />
-          <Typography variant='h6'>{`${postLastTime.toDateString()} ${postLastTime.toLocaleTimeString()}`}</Typography>
+
+          <Tooltip
+            title={`${postLastTime.toDateString()} ${postLastTime.toLocaleTimeString()}`}
+          >
+            <Typography variant='h6'>
+              <TimeAgo live={false} datetime={postLastTime} />
+            </Typography>
+          </Tooltip>
         </Stack>
 
         <Divider />

@@ -4,7 +4,15 @@ const themeOptions: ThemeOptions = {
   components: {
     MuiSvgIcon: {
       defaultProps: {
-        htmlColor: '#0c1321',
+        htmlColor: '#182356',
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          color: '#182356',
+          fontSize: '1rem',
+        },
       },
     },
   },

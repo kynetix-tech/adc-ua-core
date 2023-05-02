@@ -5,7 +5,7 @@ import { Divider } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { join } from 'path';
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router';
@@ -32,9 +32,11 @@ export default function PostView() {
   const { postId } = useParams();
   const navigate = useNavigate();
 
+  const postIdParsed = useMemo(() => parseInt(postId || '0'), [postId]);
+
   const { data: post, isLoading: isLoadingPost } = useQuery(
     [Entity.PostView],
-    () => PostService.getPostById(parseInt(postId || '0')),
+    () => PostService.getPostById(postIdParsed),
     { onError: console.log, refetchOnWindowFocus: false },
   );
 
@@ -86,7 +88,7 @@ export default function PostView() {
 
       <Divider />
 
-      {post && <CommentSection post={post} />}
+      {post && <CommentSection postId={postIdParsed} />}
     </PageContainer>
   );
 }

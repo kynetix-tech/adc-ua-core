@@ -24,7 +24,6 @@ export default function PostList() {
     () => PostService.getNewest(POST_LIMIT_PER_PAGE, offset),
     {
       onError: console.log,
-      refetchOnWindowFocus: false,
       onSuccess: (posts) => setCurrentPosts((prevPosts) => [...prevPosts, ...posts]),
     },
   );

@@ -93,10 +93,8 @@ export class LikeCommentManageService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/like-comment-manage/comment/newest',
-            path: {
-                'postId': postId,
-            },
             query: {
+                'postId': postId,
                 'limit': limit,
                 'offset': offset,
             },

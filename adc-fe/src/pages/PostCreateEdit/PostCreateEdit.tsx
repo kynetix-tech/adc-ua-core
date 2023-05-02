@@ -99,7 +99,7 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
     },
     {
       onError: console.log,
-      onSuccess: () => queryClient.invalidateQueries([Entity.PostContent]),
+      onSettled: () => queryClient.invalidateQueries(Entity.PostView),
     },
   );
 

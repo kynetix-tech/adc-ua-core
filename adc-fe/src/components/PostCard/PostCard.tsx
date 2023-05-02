@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router';
 import TimeAgo from 'timeago-react';
 
 import { paths } from '../../App.router';
-import { TEXT_PREVIEW_MAX_LEN } from '../../common/const';
+import { MEDIA_PATH, TEXT_PREVIEW_MAX_LEN } from '../../common/const';
 import { ContentTypes } from '../../interface/common';
 import { PostResponse } from '../../service/Api';
 import { StyledButton } from '../../styled-global/global-styled-components';
@@ -39,7 +39,7 @@ export default function PostCard({ post, userSub, togglePostLike }: PostCardProp
   const { user } = useAuth0();
 
   const cardMediaPreview = contentPreviewImg
-    ? contentPreviewImg.content
+    ? `${MEDIA_PATH}/${contentPreviewImg.content}`
     : path.join('src', 'assets', 'img', 'no-image.png');
 
   const postContentTextPreview = post.content.find(

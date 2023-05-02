@@ -7,6 +7,7 @@ import { useMutation, useQuery } from 'react-query';
 
 import { POST_LIMIT_PER_PAGE } from '../../common/const';
 import PostCard from '../../components/PostCard';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
 import { TabType } from '../../interface/common';
 import { LikeCommentManageService, PostResponse, PostService } from '../../service/Api';
@@ -23,21 +24,21 @@ export default function PostList() {
     [Entity.PostView, offset],
     () => PostService.getNewest(POST_LIMIT_PER_PAGE, offset),
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
       onSuccess: (posts) => setCurrentPosts((prevPosts) => [...prevPosts, ...posts]),
     },
   );
 
   const { mutate: addLike, isLoading: isLoadingLikes } = useMutation(
     [Entity.Like],
-    (postId) => LikeCommentManageService.addLike({ postId }),
-    { onError: console.log },
+    (postId: number) => LikeCommentManageService.addLike({ postId }),
+    { onError: useNotificationOnError() },
   );
 
   const { mutate: deleteLike } = useMutation(
     [Entity.Like],
-    (postId) => LikeCommentManageService.deleteLike({ postId }),
-    { onError: console.log },
+    (postId: number) => LikeCommentManageService.deleteLike({ postId }),
+    { onError: useNotificationOnError() },
   );
 
   const togglePostLike = useCallback(

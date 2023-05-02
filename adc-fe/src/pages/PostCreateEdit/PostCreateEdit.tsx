@@ -6,11 +6,16 @@ import Typography from '@mui/material/Typography';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import React, { useEffect } from 'react';
+import { Simulate } from 'react-dom/test-utils';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Navigate, useNavigate, useParams } from 'react-router';
 
 import { paths } from '../../App.router';
 import PostContentEdit from '../../components/PostContentEdit';
+import {
+  useNotificationBar,
+  useNotificationOnError,
+} from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
 import { AutocompleteOption } from '../../interface/common';
 import {
@@ -30,6 +35,7 @@ import {
   PostPaperBackground,
   TitleField,
 } from './PostCreateEdit.style';
+import error = Simulate.error;
 
 type AutocompleteType = AutocompleteOption | null;
 
@@ -61,13 +67,21 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
   const { data: makes, isLoading: isLoadingMakes } = useQuery(
     [Entity.CarMake],
     () => CarSpecificationService.getCarMakesBySearchStr(),
-    { onError: console.log, refetchOnWindowFocus: false, refetchOnMount: false },
+    {
+      onError: useNotificationOnError(),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
   );
 
   const { data: models, isLoading: isLoadingModels } = useQuery(
     [Entity.CarModel, inputMake],
     () => (inputMake ? CarSpecificationService.getCarModelByMake(inputMake.id) : []),
-    { onError: console.log, refetchOnWindowFocus: false, refetchOnMount: false },
+    {
+      onError: useNotificationOnError(),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
   );
 
   const validateForm = () => {
@@ -91,15 +105,16 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
         };
 
         if (post && post.id > 0) {
-          PostService.updatePost({ ...body, id: post.id });
+          return PostService.updatePost({ ...body, id: post.id });
         } else {
-          PostService.createPost(body);
+          return PostService.createPost(body);
         }
       }
     },
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
       onSettled: () => queryClient.invalidateQueries(Entity.PostView),
+      onSuccess: () => navigate(paths.default),
     },
   );
 
@@ -174,8 +189,7 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
           <PostContentEdit content={content} setContent={setContent} />
           <StyledButton
             onClick={() => {
-              createPost(null);
-              navigate(paths.default);
+              createPost();
             }}
             disabled={!isFormValid}
             startIcon={<PublishIcon />}

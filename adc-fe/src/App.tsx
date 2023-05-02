@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
 import { AppRouter } from './App.router';
+import { NotificationProvider } from './hooks/notification/Notification.provider';
 import { OpenAPI } from './service/Api';
 import theme from './themes';
 
@@ -35,7 +36,9 @@ function App() {
                 scope: 'openid profile email',
               }}
             >
-              <AppRouter />
+              <NotificationProvider>
+                <AppRouter />
+              </NotificationProvider>
             </Auth0Provider>
           </MuiThemeProvider>
         </StyledEngineProvider>

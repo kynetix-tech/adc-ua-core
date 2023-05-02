@@ -8,6 +8,7 @@ import { paths } from '../../App.router';
 import logo from '../../assets/logos/ADC_ animated.gif';
 import { AnimatedText } from '../../components/AnimatedText';
 import UserRegisterInfoForm from '../../components/UserRegisterInfoForm';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
 import { UsersService } from '../../service/Api';
 import {
@@ -23,7 +24,7 @@ export default function IntroLogin() {
     [Entity.User],
     () => UsersService.getCurrentUser(),
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
     },
   );
 

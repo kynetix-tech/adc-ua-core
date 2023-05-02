@@ -11,7 +11,9 @@ import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router';
 
 import { paths } from '../../App.router';
+import { MEDIA_PATH } from '../../common/const';
 import CommentSection from '../../components/CommentsSection';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
 import { ContentTypes } from '../../interface/common';
 import { PostService } from '../../service/Api';
@@ -37,7 +39,7 @@ export default function PostView() {
   const { data: post, isLoading: isLoadingPost } = useQuery(
     [Entity.PostView],
     () => PostService.getPostById(postIdParsed),
-    { onError: console.log, refetchOnWindowFocus: false },
+    { onError: useNotificationOnError(), refetchOnWindowFocus: false },
   );
 
   return (
@@ -79,7 +81,7 @@ export default function PostView() {
                 <ReactMarkdown>{item.content}</ReactMarkdown>
               ) : (
                 <CenteredTextBox>
-                  <PostImage alt='' src={item.content} />
+                  <PostImage alt='' src={`${MEDIA_PATH}/${item.content}`} />
                 </CenteredTextBox>
               )}
             </ItemContainer>

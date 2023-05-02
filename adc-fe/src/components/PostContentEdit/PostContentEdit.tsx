@@ -9,6 +9,8 @@ import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { text } from 'stream/consumers';
 
+import { MEDIA_PATH } from '../../common/const';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
 import { ContentTypes } from '../../interface/common';
 import { ContentItem, PostService } from '../../service/Api';
@@ -20,8 +22,6 @@ import {
   Label,
   MarkdownEditorStyled,
 } from './PostContentEdit.style';
-
-const MEDIA_PATH = import.meta.env.VITE_APP_MEDIA_PATH;
 
 export interface PostContentViewProps {
   content: Array<ContentItem>;
@@ -50,14 +50,14 @@ export default function PostContentEdit({ content, setContent }: PostContentView
       }
     },
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
       onSuccess: (data) => {
         if (data) {
           setContent((prevState) => [
             ...prevState,
             {
               type: ContentTypes.Img,
-              content: `${MEDIA_PATH}/${data.filename}`,
+              content: data.filename,
             },
           ]);
         }
@@ -84,7 +84,7 @@ export default function PostContentEdit({ content, setContent }: PostContentView
               }}
             />
           ) : (
-            <PostImage alt='' src={item.content} />
+            <PostImage alt='' src={`${MEDIA_PATH}/${item.content}`} />
           )}
           <AbsoluteIconButton
             onClick={() =>

@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import TimeAgo from 'timeago-react';
 
 import { COMMENT_LIMIT_PER_PAGE } from '../../common/const';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
 import { CommentViewResponse, LikeCommentManageService } from '../../service/Api';
 import { StyledButton } from '../../styled-global/global-styled-components';
@@ -40,7 +41,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     () =>
       LikeCommentManageService.getNewestComments(postId, COMMENT_LIMIT_PER_PAGE, offset),
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
       onSuccess: (comments) => {
         setCurrentComments((prevState) => [
           ...new Map([...comments, ...prevState].map((item) => [item.id, item])).values(),
@@ -58,7 +59,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         postId,
       }),
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
       onSettled: () => queryClient.invalidateQueries(Entity.Comment),
     },
   );
@@ -70,7 +71,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         commentId,
       }),
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
     },
   );
 

@@ -42,6 +42,7 @@ export class CommentRepository {
     const commentEntity = await this.repository
       .createQueryBuilder('comment')
       .offset(offset)
+      .where('post_id = :postId', { postId })
       .limit(limit)
       .leftJoinAndSelect('comment.user', 'user')
       .orderBy('comment.id', 'DESC')

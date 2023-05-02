@@ -95,7 +95,7 @@ export class LikeCommentManagingController {
     isArray: true,
   })
   public async getNewestComments(
-    @Param('postId') postId: number,
+    @Query('postId') postId: number,
     @Query('limit') limit: number = DEFAULT_LIMIT,
     @Query('offset') offset: number = DEFAULT_OFFSET,
   ): Promise<CommentViewResponse[]> {

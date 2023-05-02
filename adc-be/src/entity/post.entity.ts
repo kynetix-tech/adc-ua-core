@@ -83,7 +83,7 @@ export class PostEntity {
   @JoinColumn({ name: 'car_model_id' })
   carModel: CarModelEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.posts)
+  @ManyToOne(() => UserEntity, (user) => user.posts, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 

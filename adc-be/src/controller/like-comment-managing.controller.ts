@@ -81,8 +81,13 @@ export class LikeCommentManagingController {
   @Delete('comment')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
-  public async deleteComment(@Body() body: CommentDeleteRequest) {
-    return this.likeCommentManagingService.deleteComment(body);
+  public async deleteComment(
+    @Req() { user }: RequestWithAuth,
+    @Body() body: CommentDeleteRequest,
+  ) {
+    const { auth0Id } = user;
+
+    return this.likeCommentManagingService.deleteComment(body, auth0Id);
   }
 
   @Get('comment/newest')

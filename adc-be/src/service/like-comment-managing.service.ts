@@ -59,7 +59,18 @@ export class LikeCommentManagingService {
     }
   }
 
-  public async deleteComment(comment: CommentDeleteRequest): Promise<void> {
+  public async deleteComment(
+    comment: CommentDeleteRequest,
+    userId: string,
+  ): Promise<void> {
+    const existingComment = await this.commentRepository.getCommentById(
+      comment.commentId,
+    );
+
+    if (existingComment && existingComment.userId !== userId) {
+      throw new CommentPermissionDenied('Comment delete permission denied');
+    }
+
     return this.commentRepository.deleteComment(comment.commentId);
   }
 
@@ -78,3 +89,4 @@ export class LikeCommentManagingService {
 
 export class LikeAlreadyExists extends ApplicationError {}
 export class PostDoesNotExists extends ApplicationError {}
+export class CommentPermissionDenied extends ApplicationError {}

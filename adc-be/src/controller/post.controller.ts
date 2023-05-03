@@ -131,9 +131,14 @@ export class PostController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse({ status: HttpStatus.OK })
-  public async deletePost(@Param('id') postId: number) {
-    return null;
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  public async deletePost(
+    @Req() { user }: RequestWithAuth,
+    @Param('id') postId: number,
+  ) {
+    const { auth0Id } = user;
+
+    return this.postService.deletePost(postId, auth0Id);
   }
 }

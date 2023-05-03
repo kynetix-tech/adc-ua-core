@@ -80,7 +80,7 @@ export class PostService {
     const oldPost = await this.getPostById(post.id);
 
     if (oldPost.user.id !== userId) {
-      throw new PostEditPermissionDenied(
+      throw new PostPermissionDenied(
         'User has no right to edit a post that is not his own, permission denied',
         HttpStatus.FORBIDDEN,
       );
@@ -125,8 +125,18 @@ export class PostService {
 
     return fileName;
   }
+
+  public async deletePost(postId: number, userId: string): Promise<void> {
+    const existingPost = await this.postRepository.getPostById(postId);
+
+    if (existingPost && existingPost.user.id !== userId) {
+      throw new PostPermissionDenied('Post delete permission denied');
+    }
+
+    return this.postRepository.deletePost(postId);
+  }
 }
 
 export class ImageWithIncorrectFormatError extends ApplicationError {}
 export class PostNotFoundError extends ApplicationError {}
-export class PostEditPermissionDenied extends ApplicationError {}
+export class PostPermissionDenied extends ApplicationError {}

@@ -119,4 +119,13 @@ export class PostRepository {
       return PostRepository.toPostModel(postEntity);
     }
   }
+
+  public async deletePost(postId: number): Promise<void> {
+    const { raw } = await this.repository
+      .createQueryBuilder()
+      .delete()
+      .from(PostEntity)
+      .where('id = :postId', { postId })
+      .execute();
+  }
 }

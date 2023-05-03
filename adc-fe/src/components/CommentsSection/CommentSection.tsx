@@ -43,9 +43,13 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     {
       onError: useNotificationOnError(),
       onSuccess: (comments) => {
-        setCurrentComments((prevState) => [
-          ...new Map([...comments, ...prevState].map((item) => [item.id, item])).values(),
-        ]);
+        setCurrentComments((prevState) =>
+          [
+            ...new Map(
+              [...prevState, ...comments].map((item) => [item.id, item]),
+            ).values(),
+          ].sort((commA, commB) => commB.id - commA.id),
+        );
       },
       refetchOnWindowFocus: false,
     },

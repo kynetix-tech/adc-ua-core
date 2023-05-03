@@ -25,7 +25,10 @@ export default function PostList() {
     () => PostService.getNewest(POST_LIMIT_PER_PAGE, offset),
     {
       onError: useNotificationOnError(),
-      onSuccess: (posts) => setCurrentPosts((prevPosts) => [...prevPosts, ...posts]),
+      onSuccess: (posts) =>
+        setCurrentPosts((prevPosts) => [
+          ...new Map([...prevPosts, ...posts].map((item) => [item.id, item])).values(),
+        ]),
       refetchOnWindowFocus: false,
     },
   );
@@ -62,6 +65,13 @@ export default function PostList() {
     [currentPosts],
   );
 
+  const onDeletedPost = useCallback(
+    (postId: number) => {
+      setCurrentPosts((prevState) => prevState.filter((item) => item.id !== postId));
+    },
+    [currentPosts],
+  );
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
   };
@@ -76,7 +86,7 @@ export default function PostList() {
       <PostsContainer>
         <InfiniteScroll
           next={() => setOffset((prevOffset) => prevOffset + POST_LIMIT_PER_PAGE)}
-          hasMore={(posts || []).length + 1 === POST_LIMIT_PER_PAGE}
+          hasMore={(posts || []).length >= POST_LIMIT_PER_PAGE - 1}
           endMessage={'You have reached the bottom of the page :)'}
           loader={<LinearProgress />}
           dataLength={currentPosts.length}
@@ -88,6 +98,7 @@ export default function PostList() {
                 key={key}
                 userSub={user?.sub || ''}
                 togglePostLike={togglePostLike}
+                onDeletedPost={onDeletedPost}
               />
             ))}
         </InfiniteScroll>

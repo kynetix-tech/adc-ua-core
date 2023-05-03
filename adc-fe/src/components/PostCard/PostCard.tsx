@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import { useAuth0 } from '@auth0/auth0-react';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -11,13 +12,16 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import React, { useMemo } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import TimeAgo from 'timeago-react';
 
 import { paths } from '../../App.router';
 import { MEDIA_PATH, TEXT_PREVIEW_MAX_LEN } from '../../common/const';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
+import { Entity } from '../../interface/api-interface';
 import { ContentTypes } from '../../interface/common';
-import { PostResponse } from '../../service/Api';
+import { PostResponse, PostService } from '../../service/Api';
 import { StyledButton } from '../../styled-global/global-styled-components';
 import {
   CardContentRel,
@@ -31,12 +35,19 @@ export interface PostCardProps {
   post: PostResponse;
   userSub: string;
   togglePostLike: (postId: number) => void;
+  onDeletedPost: (postId: number) => void;
 }
 
-export default function PostCard({ post, userSub, togglePostLike }: PostCardProps) {
+export default function PostCard({
+  post,
+  userSub,
+  togglePostLike,
+  onDeletedPost,
+}: PostCardProps) {
   const contentPreviewImg = post.content.find((item) => item.type === ContentTypes.Img);
   const navigate = useNavigate();
   const { user } = useAuth0();
+  const queryClient = useQueryClient();
 
   const cardMediaPreview = contentPreviewImg
     ? `${MEDIA_PATH}/${contentPreviewImg.content}`
@@ -51,6 +62,15 @@ export default function PostCard({ post, userSub, togglePostLike }: PostCardProp
     [post],
   );
   const isOwner = useMemo(() => userSub === post.user.id, [userSub, post]);
+
+  const { mutate: deletePost } = useMutation(
+    [Entity.PostView],
+    () => PostService.deletePost(post.id),
+    {
+      onError: useNotificationOnError(),
+      onSettled: () => onDeletedPost(post.id),
+    },
+  );
 
   return (
     <FlexCard
@@ -100,14 +120,26 @@ export default function PostCard({ post, userSub, togglePostLike }: PostCardProp
           </StyledButton>
 
           {isOwner && (
-            <IconButton
-              onClick={(event) => {
-                event.stopPropagation();
-                navigate(path.join(paths.post.root, paths.post.edit.root, `${post.id}`));
-              }}
-            >
-              <EditOutlinedIcon />
-            </IconButton>
+            <>
+              <IconButton
+                onClick={(event) => {
+                  event.stopPropagation();
+                  navigate(
+                    path.join(paths.post.root, paths.post.edit.root, `${post.id}`),
+                  );
+                }}
+              >
+                <EditOutlinedIcon />
+              </IconButton>
+              <IconButton
+                onClick={(event) => {
+                  event.stopPropagation();
+                  deletePost();
+                }}
+              >
+                <DeleteOutlineIcon />
+              </IconButton>
+            </>
           )}
         </CardControlsFlexBox>
       </CardContentRel>

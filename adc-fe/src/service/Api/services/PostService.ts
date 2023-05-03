@@ -110,12 +110,12 @@ export class PostService {
 
     /**
      * @param id
-     * @returns any
+     * @returns void
      * @throws ApiError
      */
     public static deletePost(
         id: number,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/post/{id}',

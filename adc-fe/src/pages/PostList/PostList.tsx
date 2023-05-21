@@ -50,7 +50,7 @@ export default function PostList() {
       setCurrentPosts((prevState) => {
         const post = prevState.find((post) => post.id === postId);
         if (post) {
-          const likeIndex = post.likes.findIndex((like) => like.userId);
+          const likeIndex = post.likes.findIndex((like) => like.userId === user?.sub);
           if (likeIndex != -1) {
             deleteLike(postId);
             post.likes.splice(likeIndex, 1);

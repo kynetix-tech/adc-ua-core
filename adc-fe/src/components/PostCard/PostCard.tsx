@@ -98,7 +98,8 @@ export default function PostCard({
         <CardTextBox>
           <Typography variant='h4'>{post.title}</Typography>
           <Typography variant='subtitle1'>
-            {postContentTextPreview?.content.slice(0, TEXT_PREVIEW_MAX_LEN) + '...'}
+            {(postContentTextPreview?.content.slice(0, TEXT_PREVIEW_MAX_LEN) || '') +
+              '...'}
           </Typography>
         </CardTextBox>
 

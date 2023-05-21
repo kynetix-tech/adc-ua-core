@@ -9,6 +9,7 @@ import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router';
+import remarkGfm from 'remark-gfm';
 
 import { paths } from '../../App.router';
 import { MEDIA_PATH } from '../../common/const';
@@ -78,7 +79,7 @@ export default function PostView() {
           post.content.map((item, key) => (
             <ItemContainer key={key}>
               {item.type === ContentTypes.Text ? (
-                <ReactMarkdown>{item.content}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.content}</ReactMarkdown>
               ) : (
                 <CenteredTextBox>
                   <PostImage alt='' src={`${MEDIA_PATH}/${item.content}`} />

@@ -91,14 +91,20 @@ export class PostRepository {
     limit?: number,
     offset = 0,
   ): Promise<PostViewModel[]> {
+    const subQuery = this.repository
+      .createQueryBuilder('post')
+      .select('post.id')
+      .orderBy('post.id', 'DESC')
+      .offset(offset)
+      .limit(limit);
+
     const postEntity = await this.repository
       .createQueryBuilder('post')
-      .offset(offset)
-      .limit(limit)
       .leftJoinAndSelect('post.carModel', 'carModel')
       .leftJoinAndSelect('post.carMake', 'carMake')
       .leftJoinAndSelect('post.user', 'user')
       .leftJoinAndSelect('post.likes', 'likes')
+      .where(`post.id IN (${subQuery.getQuery()})`)
       .orderBy('post.id', 'DESC')
       .getMany();
 

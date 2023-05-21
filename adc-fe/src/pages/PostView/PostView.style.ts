@@ -20,6 +20,26 @@ export const IconAbsoluteContainer = styled(Box)`
 
 export const ItemContainer = styled(Box)`
   margin-top: 1rem;
+
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 0 auto;
+
+    tr {
+      border-top: 0.2rem solid;
+    }
+
+    th,
+    td {
+      padding: 0.5rem 1rem;
+      border: 1px solid ${({ theme }) => theme.palette.primary.main};
+    }
+
+    tr:nth-child(2n) {
+      background: ${({ theme }) => theme.palette.background.default};
+    }
+  }
 `;
 
 export const PostViewContainer = styled(Box)`

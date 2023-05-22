@@ -88,15 +88,29 @@ export class PostRepository {
   }
 
   public async getNewestPosts(
-    limit?: number,
+    searchStr: string,
+    carMakeId: number,
+    carModelId: number,
+    limit: number,
     offset = 0,
   ): Promise<PostViewModel[]> {
-    const subQuery = this.repository
+    let subQuery = this.repository
       .createQueryBuilder('post')
       .select('post.id')
       .orderBy('post.id', 'DESC')
       .offset(offset)
-      .limit(limit);
+      .limit(limit)
+      .where(`post.title ILIKE '%' || :searchStr || '%'`, { searchStr });
+
+    if (carMakeId)
+      subQuery = subQuery.andWhere(`post.car_make_id = :carMakeId`, {
+        carMakeId,
+      });
+
+    if (carModelId)
+      subQuery = subQuery.andWhere(`post.car_model_id = :carModelId`, {
+        carModelId,
+      });
 
     const postEntity = await this.repository
       .createQueryBuilder('post')
@@ -105,6 +119,7 @@ export class PostRepository {
       .leftJoinAndSelect('post.user', 'user')
       .leftJoinAndSelect('post.likes', 'likes')
       .where(`post.id IN (${subQuery.getQuery()})`)
+      .setParameters(subQuery.getParameters())
       .orderBy('post.id', 'DESC')
       .getMany();
 

@@ -49,10 +49,19 @@ export class PostService {
   }
 
   public async getNewestPostWithLimit(
+    searchStr: string,
+    carMakeId: number,
+    carModelId: number,
     limit: number,
     offset: number,
   ): Promise<PostViewModel[]> {
-    return await this.postRepository.getNewestPosts(limit, offset);
+    return await this.postRepository.getNewestPosts(
+      searchStr,
+      carMakeId,
+      carModelId,
+      limit,
+      offset,
+    );
   }
 
   public async createNewPost(

@@ -98,12 +98,24 @@ export class PostController {
   @HttpCode(HttpStatus.OK)
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'offset', required: false })
+  @ApiQuery({ name: 'carMakeId', required: false })
+  @ApiQuery({ name: 'carModelId', required: false })
+  @ApiQuery({ name: 'searchStr', required: false, type: 'string' })
   @ApiResponse({ status: HttpStatus.OK, type: PostResponse, isArray: true })
   public async getNewest(
+    @Query('searchStr') searchStr = '',
+    @Query('carMakeId') carMakeId: number,
+    @Query('carModelId') carModelId: number,
     @Query('limit') limit: number = DEFAULT_LIMIT,
     @Query('offset') offset: number = DEFAULT_OFFSET,
   ): Promise<PostResponse[]> {
-    const posts = await this.postService.getNewestPostWithLimit(limit, offset);
+    const posts = await this.postService.getNewestPostWithLimit(
+      searchStr,
+      carMakeId,
+      carModelId,
+      limit,
+      offset,
+    );
 
     return this.postFormatter.toPostsResponse(posts);
   }

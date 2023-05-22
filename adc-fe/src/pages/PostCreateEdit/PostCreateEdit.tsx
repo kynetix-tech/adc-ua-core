@@ -6,18 +6,14 @@ import Typography from '@mui/material/Typography';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import React, { useEffect } from 'react';
-import { Simulate } from 'react-dom/test-utils';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { Navigate, useNavigate, useParams } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 
 import { paths } from '../../App.router';
 import PostContentEdit from '../../components/PostContentEdit';
-import {
-  useNotificationBar,
-  useNotificationOnError,
-} from '../../hooks/notification/useNotificationBar';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
-import { AutocompleteOption } from '../../interface/common';
+import { AutocompleteType } from '../../interface/common';
 import {
   CarSpecificationService,
   ContentItem,
@@ -35,9 +31,6 @@ import {
   PostPaperBackground,
   TitleField,
 } from './PostCreateEdit.style';
-import error = Simulate.error;
-
-type AutocompleteType = AutocompleteOption | null;
 
 export interface PostCreateEditProps {
   post?: PostResponse;
@@ -146,7 +139,8 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
               value={inputMake}
               onChange={(event: React.SyntheticEvent, newValue: any) => {
                 setInputMake((prevState) => {
-                  if (prevState?.id != newValue.id) setInputModel(null);
+                  if (!newValue || (newValue && prevState?.id != newValue.id))
+                    setInputModel(null);
                   return newValue;
                 });
               }}

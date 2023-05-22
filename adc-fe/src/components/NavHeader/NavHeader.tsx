@@ -12,13 +12,13 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 
 import { paths } from '../../App.router';
+import { StyledButton } from '../../styled-global/global-styled-components';
 import {
   FlexBox,
   NavAppBar,
   NavContainer,
   NavLogoBox,
   NavLogoText,
-  PopoverButton,
   PopoverContainer,
   VerticalPopover,
 } from './NavHeader.style';
@@ -73,14 +73,14 @@ export default function NavHeader() {
                     <PopoverContainer>
                       <Typography variant='button'>{user?.email}</Typography>
                       <Divider orientation='horizontal' variant='middle' flexItem />
-                      <PopoverButton
+                      <StyledButton
                         startIcon={<LogoutIcon />}
                         onClick={() => {
                           logout({ logoutParams: { returnTo: window.location.origin } });
                         }}
                       >
                         Logout
-                      </PopoverButton>
+                      </StyledButton>
                     </PopoverContainer>
                   </VerticalPopover>
                 </>

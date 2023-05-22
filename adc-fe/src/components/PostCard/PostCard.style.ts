@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 
 export const FlexCard = styled(Card)`
@@ -10,6 +9,7 @@ export const FlexCard = styled(Card)`
   justify-content: space-between;
   cursor: pointer;
   max-width: 70vw;
+  min-width: 65vw;
   background-color: ${({ theme }) => theme.palette.grey['800']};
   margin: 1rem;
 `;

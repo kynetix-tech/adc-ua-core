@@ -39,8 +39,9 @@ export const StyledButton = styled(Button).attrs({
   margin: 0.5rem;
 
   &:hover {
+    color: ${({ theme }) => theme.palette.grey[700]};
     border-color: ${({ theme }) => theme.palette.secondary.main};
-    background-color: ${({ theme }) => theme.palette.grey[700]};
+    background-color: ${({ theme }) => theme.palette.secondary.main};
   }
 `;
 

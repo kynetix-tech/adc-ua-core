@@ -5,6 +5,8 @@ export interface AutocompleteOption {
 
 export type ContentType = 'text' | 'img';
 
+export type AutocompleteType = AutocompleteOption | null;
+
 export enum ContentTypes {
   Text = 'text',
   Img = 'img',

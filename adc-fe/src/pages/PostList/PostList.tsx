@@ -1,6 +1,11 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import SearchIcon from '@mui/icons-material/Search';
+import Divider from '@mui/material/Divider';
+import InputAdornment from '@mui/material/InputAdornment';
 import LinearProgress from '@mui/material/LinearProgress';
 import Tab from '@mui/material/Tab';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import React, { useCallback } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useMutation, useQuery } from 'react-query';
@@ -9,15 +14,31 @@ import { POST_LIMIT_PER_PAGE } from '../../common/const';
 import PostCard from '../../components/PostCard';
 import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
-import { TabType } from '../../interface/common';
-import { LikeCommentManageService, PostResponse, PostService } from '../../service/Api';
-import { PageContainer } from '../../styled-global/global-styled-components';
-import { ColoredTabs, PostsContainer } from './PostList.style';
+import { AutocompleteType, TabType } from '../../interface/common';
+import {
+  CarSpecificationService,
+  LikeCommentManageService,
+  PostResponse,
+  PostService,
+} from '../../service/Api';
+import {
+  PageContainer,
+  StyledButton,
+} from '../../styled-global/global-styled-components';
+import {
+  AutoCompleteFilter,
+  ColoredTabs,
+  PostsContainer,
+  StickyContainer,
+} from './PostList.style';
 
 export default function PostList() {
   const [tabIndex, setTabIndex] = React.useState<TabType>(TabType.Newest);
   const [offset, setOffset] = React.useState<number>(0);
   const [currentPosts, setCurrentPosts] = React.useState<PostResponse[]>([]);
+  const [filterMake, setFilterMake] = React.useState<AutocompleteType>(null);
+  const [filterModel, setFilterModel] = React.useState<AutocompleteType>(null);
+  const [searchStr, setSearchStr] = React.useState<string>('');
   const { user } = useAuth0();
 
   const { data: posts, isLoading: isPostsLoading } = useQuery(
@@ -43,6 +64,26 @@ export default function PostList() {
     [Entity.Like],
     (postId: number) => LikeCommentManageService.deleteLike({ postId }),
     { onError: useNotificationOnError() },
+  );
+
+  const { data: makes, isLoading: isLoadingMakes } = useQuery(
+    [Entity.CarMake],
+    () => CarSpecificationService.getCarMakesBySearchStr(),
+    {
+      onError: useNotificationOnError(),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+  );
+
+  const { data: models, isLoading: isLoadingModels } = useQuery(
+    [Entity.CarModel, filterMake],
+    () => (filterMake ? CarSpecificationService.getCarModelByMake(filterMake.id) : []),
+    {
+      onError: useNotificationOnError(),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
   );
 
   const togglePostLike = useCallback(
@@ -102,6 +143,70 @@ export default function PostList() {
               />
             ))}
         </InfiniteScroll>
+
+        <StickyContainer>
+          <Typography variant={'h5'}>Filter</Typography>
+          <Divider />
+
+          <TextField
+            value={searchStr}
+            onChange={(event) => {
+              setSearchStr(event.target.value);
+            }}
+            label='Search'
+            variant='filled'
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <AutoCompleteFilter
+            value={filterMake}
+            onChange={(event: React.SyntheticEvent, newValue: any) => {
+              setFilterMake((prevState) => {
+                if (!newValue || (newValue && prevState?.id != newValue.id))
+                  setFilterModel(null);
+                return newValue;
+              });
+            }}
+            disablePortal
+            options={
+              makes ? makes.map((item) => ({ id: item.id, label: item.title })) : []
+            }
+            renderInput={(params) => (
+              <TextField {...params} variant='filled' label='Car make' required={false} />
+            )}
+          />
+
+          <AutoCompleteFilter
+            value={filterModel}
+            onChange={(event: React.SyntheticEvent, newValue: any) => {
+              setFilterModel(newValue);
+            }}
+            disablePortal
+            options={
+              models ? models.map((item) => ({ id: item.id, label: item.title })) : []
+            }
+            renderInput={(params) => (
+              <TextField {...params} variant='filled' label='Car model' />
+            )}
+          />
+
+          <StyledButton>Submit</StyledButton>
+          <StyledButton
+            onClick={() => {
+              setSearchStr('');
+              setFilterMake(null);
+              setFilterModel(null);
+            }}
+          >
+            Reset
+          </StyledButton>
+        </StickyContainer>
       </PostsContainer>
     </PageContainer>
   );

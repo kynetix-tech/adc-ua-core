@@ -19,6 +19,7 @@ import {
   NavContainer,
   NavLogoBox,
   NavLogoText,
+  PointerBox,
   PopoverContainer,
   VerticalPopover,
 } from './NavHeader.style';
@@ -44,10 +45,12 @@ export default function NavHeader() {
       <Toolbar>
         <NavContainer>
           <FlexBox>
-            <FlexBox>
-              <NavLogoBox />
-              <NavLogoText>ADC.UA</NavLogoText>
-            </FlexBox>
+            <PointerBox onClick={() => navigate(join(paths.default))}>
+              <FlexBox>
+                <NavLogoBox />
+                <NavLogoText>ADC.UA</NavLogoText>
+              </FlexBox>
+            </PointerBox>
             {isAuthenticated && (
               <FlexBox>
                 <IconButton onClick={() => navigate(join(paths.default))}>

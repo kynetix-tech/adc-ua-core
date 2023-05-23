@@ -60,3 +60,7 @@ export const VerticalPopover = styled(Popover).attrs({
     horizontal: 'left',
   },
 })``;
+
+export const PointerBox = styled(Box)`
+  cursor: pointer;
+`;

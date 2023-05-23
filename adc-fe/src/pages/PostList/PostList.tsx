@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React, { useCallback } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { POST_LIMIT_PER_PAGE } from '../../common/const';
 import PostCard from '../../components/PostCard';
@@ -43,7 +43,14 @@ export default function PostList() {
 
   const { data: posts, isLoading: isPostsLoading } = useQuery(
     [Entity.PostView, offset],
-    () => PostService.getNewest(POST_LIMIT_PER_PAGE, offset),
+    () =>
+      PostService.getNewest(
+        filterMake?.id,
+        filterModel?.id,
+        POST_LIMIT_PER_PAGE,
+        offset,
+        searchStr,
+      ),
     {
       onError: useNotificationOnError(),
       onSuccess: (posts) =>
@@ -51,6 +58,27 @@ export default function PostList() {
           ...new Map([...prevPosts, ...posts].map((item) => [item.id, item])).values(),
         ]),
       refetchOnWindowFocus: false,
+    },
+  );
+
+  const { mutate: addFilters } = useMutation(
+    [Entity.PostView],
+    () =>
+      PostService.getNewest(
+        filterMake?.id,
+        filterModel?.id,
+        POST_LIMIT_PER_PAGE,
+        0,
+        searchStr,
+      ),
+    {
+      onError: useNotificationOnError(),
+      onSettled: (posts) => {
+        if (posts) {
+          setCurrentPosts(posts);
+          setOffset(0);
+        }
+      },
     },
   );
 
@@ -196,7 +224,7 @@ export default function PostList() {
             )}
           />
 
-          <StyledButton>Submit</StyledButton>
+          <StyledButton onClick={() => addFilters()}>Submit</StyledButton>
           <StyledButton
             onClick={() => {
               setSearchStr('');

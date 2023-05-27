@@ -224,7 +224,17 @@ export default function PostList() {
             )}
           />
 
-          <StyledButton onClick={() => addFilters()}>Submit</StyledButton>
+          <StyledButton
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              });
+              addFilters();
+            }}
+          >
+            Submit
+          </StyledButton>
           <StyledButton
             onClick={() => {
               setSearchStr('');

@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { LinearProgress } from '@mui/material';
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, memo, Suspense } from 'react';
 import { Navigate, Route } from 'react-router';
 import { Routes } from 'react-router-dom';
 
@@ -53,6 +53,7 @@ const routes: RoutesConfig[] = [
   {
     path: paths.post.root,
     element: <NavbarContainerWrapper />,
+    permission: PermissionType.authenticatedOnly,
     children: [
       { path: paths.post.new, element: <LazyCreatePost /> },
       {
@@ -90,10 +91,7 @@ const getDefaultPathByPermission = (isAuthenticated: boolean) => {
   return isAuthenticated ? paths.root : paths.login;
 };
 
-export function AppRouter() {
-  useApiTokenResolver();
-  const { isAuthenticated } = useAuth0();
-
+const AllRoutes = memo(({ isAuthenticated }: { isAuthenticated: boolean }) => {
   return (
     <Routes>
       {getRoutes(routes, isAuthenticated)}
@@ -103,4 +101,13 @@ export function AppRouter() {
       />
     </Routes>
   );
+});
+
+AllRoutes.displayName = 'AllRoutes';
+
+export function AppRouter() {
+  useApiTokenResolver();
+  const { isAuthenticated } = useAuth0();
+
+  return <AllRoutes isAuthenticated={isAuthenticated} />;
 }

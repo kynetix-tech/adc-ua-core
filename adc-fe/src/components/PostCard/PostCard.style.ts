@@ -9,7 +9,7 @@ export const FlexCard = styled(Card)`
   justify-content: space-between;
   cursor: pointer;
   max-width: 70vw;
-  min-width: 65vw;
+  width: 70vw;
   background-color: ${({ theme }) => theme.palette.grey['800']};
   margin: 1rem;
 `;

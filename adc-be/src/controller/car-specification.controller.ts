@@ -8,7 +8,7 @@ import { CarModelRepository } from '../repository/car-model.repository';
 @ApiTags('CarSpecification')
 @Controller('car-specification')
 export class CarSpecificationController {
-  private DEFAULT_LIMIT = 60;
+  private DEFAULT_LIMIT = 900;
 
   constructor(
     private readonly carMakeRepository: CarMakeRepository,

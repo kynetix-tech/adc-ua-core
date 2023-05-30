@@ -83,6 +83,8 @@ export class CommentRepository {
       .where('id = :commentId', { commentId })
       .getOne();
 
-    return CommentRepository.toCommentCreateModel(commentEntity);
+    if (commentEntity) {
+      return CommentRepository.toCommentCreateModel(commentEntity);
+    }
   }
 }

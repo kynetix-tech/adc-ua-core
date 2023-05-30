@@ -68,9 +68,15 @@ export class PostService {
     post: PostCreateUpdateRequest,
     userId: string,
   ): Promise<number> {
-    const newPostModel = this.createPostModelFromBody(post, userId);
+    try {
+      const newPostModel = this.createPostModelFromBody(post, userId);
 
-    return await this.postRepository.createPost(newPostModel);
+      return await this.postRepository.createPost(newPostModel);
+    } catch (e) {
+      throw new ValidationFailedError(
+        'Validation failed, check if the make, model, and content of the publication are correct',
+      );
+    }
   }
 
   public async getPostById(postId: number) {
@@ -95,9 +101,15 @@ export class PostService {
       );
     }
 
-    const updatePostModel = this.createPostModelFromBody(post, userId);
+    try {
+      const updatePostModel = this.createPostModelFromBody(post, userId);
 
-    return await this.postRepository.updatePost(updatePostModel);
+      return await this.postRepository.updatePost(updatePostModel);
+    } catch (e) {
+      throw new ValidationFailedError(
+        'Validation failed, check if the make, model, and content of the publication are correct',
+      );
+    }
   }
 
   public async upsertImageForPost(
@@ -149,3 +161,4 @@ export class PostService {
 export class ImageWithIncorrectFormatError extends ApplicationError {}
 export class PostNotFoundError extends ApplicationError {}
 export class PostPermissionDenied extends ApplicationError {}
+export class ValidationFailedError extends ApplicationError {}

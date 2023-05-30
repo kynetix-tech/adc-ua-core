@@ -44,7 +44,7 @@ export class PostRepository {
       .leftJoinAndSelect('post.user', 'user')
       .leftJoinAndSelect('post.likes', 'likes')
       .orderBy('post.id', 'DESC')
-      .where('user_id = :userId', { userId })
+      .where('post.user_id = :userId', { userId })
       .getMany();
 
     return postEntity.map(PostRepository.toPostModel);

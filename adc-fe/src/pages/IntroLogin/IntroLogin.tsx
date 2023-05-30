@@ -55,11 +55,7 @@ export default function IntroLogin() {
           </LoginButton>
 
           <TextContainer>
-            <Typography variant='h6'>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias assumenda,
-              debitis, doloribus expedita explicabo facilis iusto necessitatibus neque
-              nisi praesentium quis repudiandae sint tempora ut.
-            </Typography>
+            <Typography variant='h6'>Welcome to ADC.UA</Typography>
           </TextContainer>
         </CenteredContainer>
       )}

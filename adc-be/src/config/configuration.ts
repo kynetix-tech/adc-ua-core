@@ -1,5 +1,8 @@
+import { join, resolve } from 'path';
+
 export const configuration = () => ({
   port: 8080,
+  host: '127.0.0.1',
   db: {
     type: 'postgres',
     host: process.env.POSTGRES_HOST || '127.0.0.1',
@@ -8,9 +11,10 @@ export const configuration = () => ({
     username: process.env.POSTGRES_USER || 'postgres',
     password: process.env.POSTGRES_PASSWORD || 'postgres',
     synchronize: false,
-    entities: ['dist/entity//*.{ts,js}'],
+    migrationsRun: false,
+    entities: [join(__dirname, '..', 'entity', '**', '*.entity.{ts,js}')],
+    migrations: [join(__dirname, '..', 'migration', '**', '*.ts')],
     ormEntities: ['src/entity//*.ts'],
-    migrations: ['src/migration//*.ts'],
     subscribers: ['src/subscriber//*.ts'],
     cli: {
       entitiesDir: 'src/entity',
@@ -36,5 +40,13 @@ export const configuration = () => ({
       scheme: 'bearer',
       bearerFormat: 'JWT',
     },
+  },
+  cors: {
+    origin: '*',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    credentials: true,
+  },
+  media: {
+    storageDir: resolve(join('..', 'uploads')),
   },
 });

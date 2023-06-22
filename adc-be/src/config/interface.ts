@@ -12,10 +12,21 @@ export interface DatabaseConfig {
   password: string;
   database: string;
   synchronize: boolean;
+  migrationsRun: boolean;
   entities: Array<string>;
-  ormEntities: Array<string>;
   migrations: Array<string>;
+}
+
+export interface CliTypeOrmConfig {
+  entitiesDir: string;
+  migrationsDir: string;
+  subscribersDir: string;
+}
+
+export interface TypeOrmDataSourceConfig extends DatabaseConfig {
+  ormEntities: Array<string>;
   subscribers: Array<string>;
+  cli: CliTypeOrmConfig;
 }
 
 export interface SwaggerConfig {
@@ -26,4 +37,10 @@ export interface SwaggerConfig {
   license: LicenseObject;
   contact: ContactObject;
   authorization: SecuritySchemeObject;
+}
+
+export interface CorsConfig {
+  origin: string;
+  methods: Array<string>;
+  credentials: boolean;
 }

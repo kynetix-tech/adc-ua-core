@@ -39,13 +39,21 @@ export class CarModelResponse {
 
 export class ContentItem {
   @ApiProperty()
-  id: number;
-
-  @ApiProperty()
   type: 'text' | 'img';
 
   @ApiProperty()
   content: string;
+}
+
+export class LikeResponse {
+  @ApiProperty()
+  userId: string;
+
+  @ApiProperty()
+  postId: number;
+
+  @ApiProperty()
+  id: number;
 }
 
 export class PostResponse {
@@ -67,6 +75,9 @@ export class PostResponse {
   @ApiProperty()
   user: UserResponse;
 
+  @ApiProperty({ isArray: true, type: LikeResponse })
+  likes: Array<LikeResponse>;
+
   @ApiProperty()
   createdAt: Date;
 
@@ -74,13 +85,10 @@ export class PostResponse {
   updatedAt: Date;
 
   @ApiProperty()
-  likes: number;
-
-  @ApiProperty()
   id: number;
 }
 
-export class PostCreationResponse {
+export class PostCreateUpdateResponse {
   @ApiProperty()
   postId: number;
 }
@@ -88,4 +96,26 @@ export class PostCreationResponse {
 export class ImageUploadResponse {
   @ApiProperty()
   filename: string;
+}
+
+export class CommentCreateResponse {
+  @ApiProperty()
+  commentId: number;
+}
+
+export class CommentViewResponse {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  text: string;
+
+  @ApiProperty()
+  postId: number;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  user: UserResponse;
 }

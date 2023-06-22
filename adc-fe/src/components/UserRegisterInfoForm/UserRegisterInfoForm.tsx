@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 
 import { paths } from '../../App.router';
 import logo from '../../assets/logos/adc-ua-logo.png';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity, Gender } from '../../interface/api-interface';
 import { UserRegisterRequest, UsersService } from '../../service/Api';
 import { UniversalButton } from '../../styled-global/global-styled-components';
@@ -35,7 +36,7 @@ export default function UserRegisterInfoForm() {
       return UsersService.register(userRegisterInfo);
     },
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
       onSuccess: () => queryClient.invalidateQueries(Entity.User),
       onSettled: () => navigate(paths.root),
     },

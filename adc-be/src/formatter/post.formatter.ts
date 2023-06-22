@@ -2,17 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { PostViewModel } from '../model/post.model';
 import {
   ImageUploadResponse,
-  PostCreationResponse,
+  PostCreateUpdateResponse,
   PostResponse,
 } from '../dto/responce.dto';
 import { CarSpecificationFormatter } from './car-specification.formatter';
 import { UserFormatter } from './user.formatter';
+import { LikeCommentManagingFormatter } from './like-comment-managing.formatter';
 
 @Injectable()
 export class PostFormatter {
   constructor(
     private readonly carSpecificationFormatter: CarSpecificationFormatter,
     private readonly userFormatter: UserFormatter,
+    private readonly likeCommentManagingFormatter: LikeCommentManagingFormatter,
   ) {}
 
   public toPostResponse(post: PostViewModel): PostResponse {
@@ -25,9 +27,9 @@ export class PostFormatter {
         post.carModel,
       ),
       user: this.userFormatter.toUserResponse(post.user),
+      likes: post.likes.map(this.likeCommentManagingFormatter.toLikeResponse),
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
-      likes: post.likes,
       id: post.id,
     };
   }
@@ -36,7 +38,7 @@ export class PostFormatter {
     return posts.map(this.toPostResponse.bind(this));
   }
 
-  public toPostCreationResponse(postId: number): PostCreationResponse {
+  public toPostCreateUpdateResponse(postId: number): PostCreateUpdateResponse {
     return { postId };
   }
 

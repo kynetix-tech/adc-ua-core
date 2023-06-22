@@ -15,18 +15,6 @@ export class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: 'integer',
-    nullable: true,
-  })
-  replyID: number;
-
-  @Column({
-    type: 'integer',
-    default: 0,
-  })
-  likes: number;
-
   @CreateDateColumn({
     nullable: false,
     name: 'created_at',
@@ -38,11 +26,21 @@ export class CommentEntity {
   })
   text: string;
 
-  @ManyToOne(() => PostEntity, (post) => post.comments)
+  @Column({
+    name: 'post_id',
+  })
+  postId: number;
+
+  @Column({
+    name: 'user_id',
+  })
+  userId: string;
+
+  @ManyToOne(() => PostEntity, (post) => post.comments, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'post_id' })
   post: PostEntity;
 
-  @OneToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 }

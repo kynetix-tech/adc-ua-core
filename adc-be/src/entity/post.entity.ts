@@ -11,9 +11,9 @@ import { UserEntity } from './user.entity';
 import { CommentEntity } from './comment.entity';
 import { CarMakeEntity } from './car-make.entity';
 import { CarModelEntity } from './car-model.entity';
+import { LikeEntity } from './like.entity';
 
 export interface ContentItem {
-  id: number;
   type: 'text' | 'img';
   content: string;
 }
@@ -51,12 +51,6 @@ export class PostEntity {
 
   @Column({
     type: 'integer',
-    default: 0,
-  })
-  likes: number;
-
-  @Column({
-    type: 'integer',
     nullable: true,
   })
   carYear: number;
@@ -89,10 +83,13 @@ export class PostEntity {
   @JoinColumn({ name: 'car_model_id' })
   carModel: CarModelEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.posts)
+  @ManyToOne(() => UserEntity, (user) => user.posts, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   comments: CommentEntity[];
+
+  @OneToMany(() => LikeEntity, (like) => like.post)
+  likes: LikeEntity[];
 }

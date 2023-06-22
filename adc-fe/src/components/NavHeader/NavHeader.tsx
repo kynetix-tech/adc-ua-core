@@ -7,21 +7,26 @@ import { Divider } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { join } from 'path';
 import React from 'react';
+import { useNavigate } from 'react-router';
 
+import { paths } from '../../App.router';
+import { StyledButton } from '../../styled-global/global-styled-components';
 import {
   FlexBox,
   NavAppBar,
   NavContainer,
   NavLogoBox,
   NavLogoText,
-  PopoverButton,
+  PointerBox,
   PopoverContainer,
   VerticalPopover,
 } from './NavHeader.style';
 
 export default function NavHeader() {
   const { isAuthenticated, logout, user } = useAuth0();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -40,16 +45,22 @@ export default function NavHeader() {
       <Toolbar>
         <NavContainer>
           <FlexBox>
-            <FlexBox>
-              <NavLogoBox />
-              <NavLogoText>ADC.UA</NavLogoText>
-            </FlexBox>
+            <PointerBox onClick={() => navigate(join(paths.default))}>
+              <FlexBox>
+                <NavLogoBox />
+                <NavLogoText>ADC.UA</NavLogoText>
+              </FlexBox>
+            </PointerBox>
             {isAuthenticated && (
               <FlexBox>
-                <IconButton>
+                <IconButton onClick={() => navigate(join(paths.default))}>
                   <ViewCompactIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={() =>
+                    navigate(join(paths.default, paths.post.root, paths.post.new))
+                  }
+                >
                   <AddCircleOutlineIcon />
                 </IconButton>
                 <>
@@ -65,14 +76,14 @@ export default function NavHeader() {
                     <PopoverContainer>
                       <Typography variant='button'>{user?.email}</Typography>
                       <Divider orientation='horizontal' variant='middle' flexItem />
-                      <PopoverButton
+                      <StyledButton
                         startIcon={<LogoutIcon />}
                         onClick={() => {
                           logout({ logoutParams: { returnTo: window.location.origin } });
                         }}
                       >
                         Logout
-                      </PopoverButton>
+                      </StyledButton>
                     </PopoverContainer>
                   </VerticalPopover>
                 </>

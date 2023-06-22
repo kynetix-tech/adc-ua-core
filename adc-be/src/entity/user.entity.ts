@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { PostEntity } from './post.entity';
+import { LikeEntity } from './like.entity';
 
 export enum Role {
   User = 'User',
@@ -56,4 +57,7 @@ export class UserEntity {
 
   @OneToMany(() => PostEntity, (post) => post.user)
   posts: PostEntity[];
+
+  @OneToMany(() => LikeEntity, (like) => like.user)
+  likes: LikeEntity[];
 }

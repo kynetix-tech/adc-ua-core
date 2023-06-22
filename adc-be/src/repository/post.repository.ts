@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { PostEntity } from '../entity/post.entity';
-import { PostCreateModel, PostViewModel } from '../model/post.model';
+import { PostCreateUpdateModel, PostViewModel } from '../model/post.model';
 import { CarMakeRepository } from './car-make.repository';
 import { CarModelRepository } from './car-model.repository';
 import { UserRepository } from './user.repository';
+import { LikeRepository } from './like.repository';
 
 @Injectable()
 export class PostRepository {
@@ -22,26 +23,34 @@ export class PostRepository {
       CarMakeRepository.toCarMakeModel(post.carMake),
       CarModelRepository.toCarModelModel(post.carModel),
       UserRepository.toUserModel(post.user),
+      post.likes.map(LikeRepository.toLikeModel),
       post.createdAt,
       post.updatedAt,
-      post.likes,
       post.id,
     );
   }
 
-  public async getAllByUserId(userId: string): Promise<PostViewModel[]> {
+  public async getByUserId(
+    userId: string,
+    limit: number,
+    offset: number,
+  ): Promise<PostViewModel[]> {
     const postEntity = await this.repository
       .createQueryBuilder('post')
+      .offset(offset)
+      .limit(limit)
       .leftJoinAndSelect('post.carModel', 'carModel')
       .leftJoinAndSelect('post.carMake', 'carMake')
       .leftJoinAndSelect('post.user', 'user')
-      .where('user_id = :userId', { userId })
+      .leftJoinAndSelect('post.likes', 'likes')
+      .orderBy('post.id', 'DESC')
+      .where('post.user_id = :userId', { userId })
       .getMany();
 
     return postEntity.map(PostRepository.toPostModel);
   }
 
-  public async createPost(post: PostCreateModel): Promise<number> {
+  public async createPost(post: PostCreateUpdateModel): Promise<number> {
     const { raw } = await this.repository
       .createQueryBuilder()
       .insert()
@@ -57,5 +66,87 @@ export class PostRepository {
       .execute();
 
     return raw[0].id;
+  }
+
+  public async updatePost(post: PostCreateUpdateModel): Promise<number> {
+    const { raw } = await this.repository
+      .createQueryBuilder()
+      .update(PostEntity)
+      .set({
+        title: post.title,
+        content: post.content,
+        carYear: post.carYear,
+        carMakeId: post.carMakeId,
+        carModelId: post.carModelId,
+        userId: post.userId,
+        updatedAt: new Date(),
+      })
+      .where('id = :postId', { postId: post.id })
+      .execute();
+
+    return post.id;
+  }
+
+  public async getNewestPosts(
+    searchStr: string,
+    carMakeId: number,
+    carModelId: number,
+    limit: number,
+    offset = 0,
+  ): Promise<PostViewModel[]> {
+    let subQuery = this.repository
+      .createQueryBuilder('post')
+      .select('post.id')
+      .orderBy('post.id', 'DESC')
+      .offset(offset)
+      .limit(limit)
+      .where(`post.title ILIKE '%' || :searchStr || '%'`, { searchStr });
+
+    if (carMakeId)
+      subQuery = subQuery.andWhere(`post.car_make_id = :carMakeId`, {
+        carMakeId,
+      });
+
+    if (carModelId)
+      subQuery = subQuery.andWhere(`post.car_model_id = :carModelId`, {
+        carModelId,
+      });
+
+    const postEntity = await this.repository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.carModel', 'carModel')
+      .leftJoinAndSelect('post.carMake', 'carMake')
+      .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.likes', 'likes')
+      .where(`post.id IN (${subQuery.getQuery()})`)
+      .setParameters(subQuery.getParameters())
+      .orderBy('post.id', 'DESC')
+      .getMany();
+
+    return postEntity.map(PostRepository.toPostModel);
+  }
+
+  public async getPostById(postId: number): Promise<PostViewModel> {
+    const postEntity = await this.repository
+      .createQueryBuilder('post')
+      .where('post.id = :postId', { postId })
+      .leftJoinAndSelect('post.carModel', 'carModel')
+      .leftJoinAndSelect('post.carMake', 'carMake')
+      .leftJoinAndSelect('post.user', 'user')
+      .leftJoinAndSelect('post.likes', 'likes')
+      .getOne();
+
+    if (postEntity) {
+      return PostRepository.toPostModel(postEntity);
+    }
+  }
+
+  public async deletePost(postId: number): Promise<void> {
+    const { raw } = await this.repository
+      .createQueryBuilder()
+      .delete()
+      .from(PostEntity)
+      .where('id = :postId', { postId })
+      .execute();
   }
 }

@@ -4,14 +4,22 @@ const themeOptions: ThemeOptions = {
   components: {
     MuiSvgIcon: {
       defaultProps: {
-        htmlColor: '#0c1321',
+        htmlColor: '#182356',
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          color: '#182356',
+          fontSize: '1rem',
+        },
       },
     },
   },
   palette: {
-    primary: { main: '#177bc2', contrastText: '#ffffff' },
+    primary: { main: '#7791a1', contrastText: '#ffffff' },
     secondary: { main: '#182356', contrastText: '#ffffff' },
-    background: { default: '#d6dae1', paper: '#ffffff' },
+    background: { default: '#d6dae1', paper: '#e8e8e8' },
     text: { primary: '#0c1321', secondary: '#68758B' },
     action: { active: '#6b778c' },
     success: { main: '#4caf50', contrastText: '#ffffff', light: '#c7efc7' },

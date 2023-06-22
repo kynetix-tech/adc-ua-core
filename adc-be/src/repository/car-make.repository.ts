@@ -22,7 +22,7 @@ export class CarMakeRepository {
     limit: number,
   ): Promise<CarMakeModel[]> {
     const carMakesEntity = await this.queryBuilder
-      .where(`UPPER(title) like UPPER('${likeStr}%')`, { likeStr })
+      .where(`title ILIKE '%' || :likeStr || '%'`, { likeStr })
       .limit(limit)
       .getMany();
 

@@ -4,9 +4,11 @@ import React, { useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { Navigate } from 'react-router';
 
+import { paths } from '../../App.router';
 import logo from '../../assets/logos/ADC_ animated.gif';
 import { AnimatedText } from '../../components/AnimatedText';
 import UserRegisterInfoForm from '../../components/UserRegisterInfoForm';
+import { useNotificationOnError } from '../../hooks/notification/useNotificationBar';
 import { Entity } from '../../interface/api-interface';
 import { UsersService } from '../../service/Api';
 import {
@@ -22,7 +24,7 @@ export default function IntroLogin() {
     [Entity.User],
     () => UsersService.getCurrentUser(),
     {
-      onError: console.log,
+      onError: useNotificationOnError(),
     },
   );
 
@@ -38,7 +40,7 @@ export default function IntroLogin() {
 
   return (
     <>
-      {isRegisterUser && <Navigate to={'/'} />}
+      {isRegisterUser && <Navigate to={paths.default} />}
       {isOnlyAuth0User ? (
         <CenteredContainer>
           <UserRegisterInfoForm />
@@ -53,11 +55,7 @@ export default function IntroLogin() {
           </LoginButton>
 
           <TextContainer>
-            <Typography variant='h6'>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias assumenda,
-              debitis, doloribus expedita explicabo facilis iusto necessitatibus neque
-              nisi praesentium quis repudiandae sint tempora ut.
-            </Typography>
+            <Typography variant='h6'>Welcome to ADC.UA</Typography>
           </TextContainer>
         </CenteredContainer>
       )}

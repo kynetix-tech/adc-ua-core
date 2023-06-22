@@ -4,7 +4,8 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: radial-gradient(circle, rgba(255,255,255,0.5354516806722689) 0%, rgba(255,255,255,1) 0%, rgba(119,170,221,1) 100%);
+  /*background: radial-gradient(circle, rgba(255,255,255,0.5354516806722689) 0%, rgba(255,255,255,1) 0%, rgba(119,170,221,1) 100%);*/
+  background: #fdfdfd;
 }
 
 code {

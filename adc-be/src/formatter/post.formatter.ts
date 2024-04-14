@@ -29,7 +29,6 @@ export class PostFormatter {
       user: this.userFormatter.toUserResponse(post.user),
       likes: post.likes.map(this.likeCommentManagingFormatter.toLikeResponse),
       createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
       id: post.id,
     };
   }
@@ -38,7 +37,7 @@ export class PostFormatter {
     return posts.map(this.toPostResponse.bind(this));
   }
 
-  public toPostCreateUpdateResponse(postId: number): PostCreateUpdateResponse {
+  public toPostCreateUpdateResponse(postId: string): PostCreateUpdateResponse {
     return { postId };
   }
 

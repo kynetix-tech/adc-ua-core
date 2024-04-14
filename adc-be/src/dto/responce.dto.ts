@@ -50,10 +50,10 @@ export class LikeResponse {
   userId: string;
 
   @ApiProperty()
-  postId: number;
+  postId: string;
 
   @ApiProperty()
-  id: number;
+  id: string;
 }
 
 export class PostResponse {
@@ -82,15 +82,12 @@ export class PostResponse {
   createdAt: Date;
 
   @ApiProperty()
-  updatedAt: Date;
-
-  @ApiProperty()
-  id: number;
+  id: string;
 }
 
 export class PostCreateUpdateResponse {
   @ApiProperty()
-  postId: number;
+  postId: string;
 }
 
 export class ImageUploadResponse {

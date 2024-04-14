@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { ContentItem } from '../entity/post.entity';
 import { CarMakeModel } from './car-make.model';
 import { CarModelModel } from './car-model.model';
@@ -12,10 +13,9 @@ export class PostViewModel {
     public readonly carMake: CarMakeModel,
     public readonly carModel: CarModelModel,
     public readonly user: UserModel,
-    public readonly likes: LikeModel[] = [],
     public readonly createdAt: Date = null,
-    public readonly updatedAt: Date = null,
-    public readonly id: number = 0,
+    public readonly id: string = uuidv4(),
+    public likes: LikeModel[] = [],
   ) {}
 }
 
@@ -27,6 +27,6 @@ export class PostCreateUpdateModel {
     public readonly carMakeId: number,
     public readonly carModelId: number,
     public readonly userId: string,
-    public readonly id: number = 0,
+    public readonly id: string = uuidv4(),
   ) {}
 }

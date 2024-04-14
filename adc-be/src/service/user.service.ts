@@ -1,4 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+
 import { UserRepository } from '../repository/user.repository';
 import { UserModel } from '../model/user.model';
 import { ApplicationError } from '../common/aplication.error';
@@ -18,6 +20,7 @@ export class UserService {
     }
 
     const userModel = new UserModel(
+      uuidv4(),
       auth0Id,
       user.email,
       user.firstName,
@@ -29,12 +32,12 @@ export class UserService {
     return await this.userRepository.getByAuth0Id(id);
   }
 
-  public async getById(userId: string): Promise<UserModel> {
-    const user = await this.userRepository.getByAuth0Id(userId);
+  public async getByAuth0Id(auth0Id: string): Promise<UserModel> {
+    const user = await this.userRepository.getByAuth0Id(auth0Id);
 
     if (!user) {
       throw new UserNotExistsError(
-        `User with id: ${userId} not exists in server db`,
+        `User with id: ${auth0Id} not exists in server db`,
         HttpStatus.NOT_FOUND,
       );
     }

@@ -1,90 +1,74 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager, Repository } from 'typeorm';
-import { CommentEntity } from '../entity/comment.entity';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+
 import { CommentCreateModel, CommentViewModel } from '../model/comment.model';
 import { UserRepository } from './user.repository';
+import { Post } from '../schema/post.schema';
+import { CommentDocument } from '../schema/comment.schema';
 
 @Injectable()
 export class CommentRepository {
-  private repository: Repository<CommentEntity>;
+  @InjectModel(Post.name) private model: Model<CommentDocument>;
 
-  constructor(private manager: EntityManager) {
-    this.repository = this.manager.getRepository(CommentEntity);
-  }
-
-  public static toCommentViewModel(
-    commentEntity: CommentEntity,
-  ): CommentViewModel {
+  public static toCommentViewModel(comment: CommentDocument): CommentViewModel {
     return new CommentViewModel(
-      commentEntity.text,
-      commentEntity.postId,
-      commentEntity.createdAt,
-      UserRepository.toUserModel(commentEntity.user),
-      commentEntity.id,
+      comment.text,
+      comment.post._id,
+      comment.createdAt,
+      UserRepository.toUserModel(comment.user),
+      comment.id,
     );
   }
 
   public static toCommentCreateModel(
-    commentEntity: CommentEntity,
+    commentEntity: CommentDocument,
   ): CommentCreateModel {
     return new CommentCreateModel(
       commentEntity.text,
-      commentEntity.postId,
-      commentEntity.userId,
+      commentEntity.post._id,
+      commentEntity.user._id,
     );
   }
 
   public async getNewestCommentsForPost(
-    postId: number,
+    postId: string,
     limit: number,
     offset: number,
   ): Promise<CommentViewModel[]> {
-    const commentEntity = await this.repository
-      .createQueryBuilder('comment')
-      .offset(offset)
-      .where('post_id = :postId', { postId })
+    const commentDocs = await this.model
+      .find({ post: postId })
+      .sort('id')
+      .populate(['post', 'user'])
       .limit(limit)
-      .leftJoinAndSelect('comment.user', 'user')
-      .orderBy('comment.id', 'DESC')
-      .getMany();
+      .skip(offset);
 
-    return commentEntity.map(CommentRepository.toCommentViewModel);
+    return commentDocs.map(CommentRepository.toCommentViewModel);
   }
 
   public async createComment(
     commentModel: CommentCreateModel,
   ): Promise<number> {
-    const { raw } = await this.repository
-      .createQueryBuilder()
-      .insert()
-      .into(CommentEntity)
-      .values({
-        text: commentModel.text,
-        postId: commentModel.postId,
-        userId: commentModel.userId,
-      })
-      .execute();
+    const doc = await this.model.create({
+      text: commentModel.text,
+      post: commentModel.postId,
+      user: commentModel.userId,
+    });
 
-    return raw[0].id;
+    return doc.id;
   }
 
   public async deleteComment(commentId: number): Promise<void> {
-    const { raw } = await this.repository
-      .createQueryBuilder()
-      .delete()
-      .from(CommentEntity)
-      .where('id = :commentId', { commentId })
-      .execute();
+    await this.model.deleteOne({ id: commentId });
   }
 
   public async getCommentById(commentId: number): Promise<CommentCreateModel> {
-    const commentEntity = await this.repository
-      .createQueryBuilder()
-      .where('id = :commentId', { commentId })
-      .getOne();
+    const commentDoc = await this.model
+      .findOne({ id: commentId })
+      .populate(['post', 'user']);
 
-    if (commentEntity) {
-      return CommentRepository.toCommentCreateModel(commentEntity);
+    if (commentDoc) {
+      return CommentRepository.toCommentCreateModel(commentDoc);
     }
   }
 }

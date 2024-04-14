@@ -1,7 +1,14 @@
-import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CarMakeRepository } from '../repository/car-make.repository';
 import { CarSpecificationFormatter } from '../formatter/car-specification.formatter';
-import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CarMakeResponse, CarModelResponse } from '../dto/responce.dto';
 import { CarModelRepository } from '../repository/car-model.repository';
 
@@ -18,17 +25,12 @@ export class CarSpecificationController {
 
   @Get('makes')
   @HttpCode(HttpStatus.OK)
-  @ApiQuery({ name: 'searchStr', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @ApiResponse({ status: HttpStatus.OK, type: CarMakeResponse, isArray: true })
   public async getCarMakesBySearchStr(
-    @Query('searchStr') searchStr = '',
     @Query('limit') limit: number = this.DEFAULT_LIMIT,
   ) {
-    const makes = await this.carMakeRepository.getCarMakesLike(
-      searchStr,
-      limit,
-    );
+    const makes = await this.carMakeRepository.getCarMakesLike(limit);
 
     return this.carSpecificationFormatter.toCarMakesResponse(makes);
   }
@@ -38,13 +40,9 @@ export class CarSpecificationController {
   @ApiResponse({ status: HttpStatus.OK, type: CarModelResponse, isArray: true })
   @ApiQuery({ name: 'searchStr', required: false })
   public async getCarModelByMake(
-    @Query('searchStr') searchStr = '',
-    @Query('makeId') makeId: number,
+    @Query('makeId', ParseIntPipe) makeId: number,
   ): Promise<CarModelResponse[]> {
-    const models = await this.carModelRepository.getAllModelsByMake(
-      makeId,
-      searchStr,
-    );
+    const models = await this.carModelRepository.getAllModelsByMake(makeId);
 
     return this.carSpecificationFormatter.toCarModelsResponce(models);
   }

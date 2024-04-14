@@ -31,10 +31,12 @@ export class LikeCommentManagingService {
     }
 
     try {
+      console.log(userId, newLike.postId);
       return await this.likeRepository.addLike(
         new LikeModel(userId, newLike.postId),
       );
     } catch (error) {
+      console.log(error);
       throw new PostDoesNotExists('Post does not exists');
     }
   }
@@ -75,7 +77,7 @@ export class LikeCommentManagingService {
   }
 
   public async getNewestCommentsWithLimit(
-    postId: number,
+    postId: string,
     limit: number,
     offset: number,
   ) {

@@ -1,33 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager, SelectQueryBuilder } from 'typeorm';
-import { CarModelEntity } from '../entity/car-model.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CarModelModel } from '../model/car-model.model';
+import { CarModel, CarModelDocument } from '../schema/car-model.schema';
 
 @Injectable()
 export class CarModelRepository {
-  private queryBuilder: SelectQueryBuilder<CarModelEntity>;
+  @InjectModel(CarModel.name) private model: Model<CarModelDocument>;
 
-  constructor(private manager: EntityManager) {
-    this.queryBuilder = this.manager
-      .getRepository(CarModelEntity)
-      .createQueryBuilder('car_model');
+  public static toCarModelModel(carModelEntity: CarModelDocument) {
+    return new CarModelModel(carModelEntity._id, carModelEntity.title);
   }
 
-  public static toCarModelModel(carModelEntity: CarModelEntity) {
-    return new CarModelModel(carModelEntity.id, carModelEntity.title);
-  }
+  public async getAllModelsByMake(makeId: number): Promise<CarModelModel[]> {
+    const carModelDocs = await this.model.find({
+      make: makeId,
+    });
+    console.log(carModelDocs);
 
-  public async getAllModelsByMake(
-    makeId: number,
-    likeStr: string,
-  ): Promise<CarModelModel[]> {
-    const models = await this.queryBuilder
-      .where(`make_id = :makeId AND UPPER(title) like UPPER('%${likeStr}%')`, {
-        makeId,
-        likeStr,
-      })
-      .getMany();
-
-    return models.map(CarModelRepository.toCarModelModel);
+    return carModelDocs.map(CarModelRepository.toCarModelModel);
   }
 }

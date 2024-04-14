@@ -2,41 +2,34 @@ import { Injectable } from '@nestjs/common';
 import { EntityManager, SelectQueryBuilder } from 'typeorm';
 import { ChecksumEntity } from '../entity/checksum.entity';
 import { CheckSumModel } from '../model/checkSumModel';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post } from '../schema/post.schema';
+import { Model } from 'mongoose';
+import { PostModule } from '../module/post.module';
+import { Checksum, ChecksumDocument } from '../schema/checksum.schema';
 
 @Injectable()
 export class CheckSumRepository {
-  private queryBuilder: SelectQueryBuilder<ChecksumEntity>;
-
-  constructor(private manager: EntityManager) {
-    this.queryBuilder = this.manager
-      .getRepository(ChecksumEntity)
-      .createQueryBuilder('checksum');
-  }
+  @InjectModel(Checksum.name) private model: Model<ChecksumDocument>;
 
   public async getFileNameByCheckSumIfExists(
     checkSum: string,
     userId: string,
   ): Promise<string> {
-    const checkSumEntity = await this.queryBuilder
-      .where('checksum = :checkSum', { checkSum })
-      .andWhere('user_id = :userId', { userId })
-      .getOne();
+    const doc = await this.model.findOne({
+      $and: [{ checkSum: checkSum }, { user: userId }],
+    });
 
-    if (checkSumEntity) return checkSumEntity.fileName;
-    return '';
+    return doc?.fileName || '';
   }
 
   public async setNewCheckSum(checkSumModel: CheckSumModel): Promise<number> {
-    const { raw } = await this.queryBuilder
-      .insert()
-      .into(ChecksumEntity)
-      .values({
-        checkSum: checkSumModel.checkSum,
-        fileName: checkSumModel.fileName,
-        userId: checkSumModel.userId,
-      })
-      .execute();
+    const doc = await this.model.create({
+      checkSum: checkSumModel.checkSum,
+      fileName: checkSumModel.fileName,
+      userId: checkSumModel.userId,
+    });
 
-    return raw[0].id;
+    return doc.id;
   }
 }

@@ -10,6 +10,7 @@ import { CheckSumRepository } from '../repository/check-sum-repository.service';
 import { CheckSumModel } from '../model/checkSumModel';
 import { ConfigService } from '@nestjs/config';
 import { ApplicationError } from '../common/aplication.error';
+import { LikeRepository } from '../repository/like.repository';
 
 @Injectable()
 export class PostService {
@@ -20,6 +21,7 @@ export class PostService {
     private readonly postRepository: PostRepository,
     private readonly checkSumRepository: CheckSumRepository,
     private readonly configService: ConfigService,
+    private readonly likeRepository: LikeRepository,
   ) {
     this.mediaDirPath = this.configService.get<string>('media.storageDir');
     this.saltFileName = this.configService.get<string>('media.fileNameSalt');
@@ -49,38 +51,32 @@ export class PostService {
   }
 
   public async getNewestPostWithLimit(
-    searchStr: string,
-    carMakeId: number,
-    carModelId: number,
     limit: number,
     offset: number,
   ): Promise<PostViewModel[]> {
-    return await this.postRepository.getNewestPosts(
-      searchStr,
-      carMakeId,
-      carModelId,
-      limit,
-      offset,
-    );
+    return await this.postRepository.getNewestPosts(limit, offset);
   }
 
   public async createNewPost(
     post: PostCreateUpdateRequest,
     userId: string,
-  ): Promise<number> {
+  ): Promise<string> {
     try {
+      console.log(post);
       const newPostModel = this.createPostModelFromBody(post, userId);
 
       return await this.postRepository.createPost(newPostModel);
     } catch (e) {
+      console.log(e);
       throw new ValidationFailedError(
         'Validation failed, check if the make, model, and content of the publication are correct',
       );
     }
   }
 
-  public async getPostById(postId: number) {
+  public async getPostById(postId: string) {
     const post = await this.postRepository.getPostById(postId);
+    post.likes = await this.likeRepository.getLikeByPost(post.id);
 
     if (!post)
       throw new PostNotFoundError(
@@ -147,7 +143,7 @@ export class PostService {
     return fileName;
   }
 
-  public async deletePost(postId: number, userId: string): Promise<void> {
+  public async deletePost(postId: string, userId: string): Promise<void> {
     const existingPost = await this.postRepository.getPostById(postId);
 
     if (existingPost && existingPost.user.id !== userId) {

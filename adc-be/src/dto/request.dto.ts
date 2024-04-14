@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entity/user.entity';
 import { ContentItem } from './responce.dto';
-import { isNumber } from '@nestjs/common/utils/shared.utils';
+import { v4 as uuidv4 } from 'uuid';
 
 export class UserRegisterRequest {
   @ApiProperty()
@@ -33,13 +33,13 @@ export class PostCreateUpdateRequest {
   @ApiProperty()
   carModelId: number;
 
-  @ApiProperty({ required: false, type: Number })
-  id = 0;
+  @ApiProperty({ required: false, type: String })
+  id?: string;
 }
 
 export class LikeRequest {
   @ApiProperty()
-  postId: number;
+  postId: string;
 }
 
 export class CommentGetCreateRequest {
@@ -47,7 +47,7 @@ export class CommentGetCreateRequest {
   text: string;
 
   @ApiProperty()
-  postId: number;
+  postId: string;
 }
 
 export class CommentDeleteRequest {

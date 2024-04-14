@@ -12,20 +12,17 @@ export class CarSpecificationService {
 
     /**
      * @param limit
-     * @param searchStr
      * @returns CarMakeResponse
      * @throws ApiError
      */
     public static getCarMakesBySearchStr(
         limit?: number,
-        searchStr?: any,
     ): CancelablePromise<Array<CarMakeResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/car-specification/makes',
             query: {
                 'limit': limit,
-                'searchStr': searchStr,
             },
         });
     }

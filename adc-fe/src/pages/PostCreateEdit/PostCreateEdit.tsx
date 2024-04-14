@@ -67,6 +67,7 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
     },
   );
 
+  console.log({ inputMake });
   const { data: models, isLoading: isLoadingModels } = useQuery(
     [Entity.CarModel, inputMake],
     () => (inputMake ? CarSpecificationService.getCarModelByMake(inputMake.id) : []),
@@ -97,7 +98,7 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
           carModelId: inputModel.id,
         };
 
-        if (post && post.id > 0) {
+        if (post && post.id) {
           return PostService.updatePost({ ...body, id: post.id });
         } else {
           return PostService.createPost(body);

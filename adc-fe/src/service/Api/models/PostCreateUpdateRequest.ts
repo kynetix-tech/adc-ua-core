@@ -10,6 +10,6 @@ export type PostCreateUpdateRequest = {
     carYear: number;
     carMakeId: number;
     carModelId: number;
-    id?: number;
+    id?: string;
 };
 

@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type PostCreateUpdateResponse = {
-    postId: number;
+    postId: string;
 };
 

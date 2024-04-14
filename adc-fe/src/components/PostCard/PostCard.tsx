@@ -34,8 +34,8 @@ import {
 export interface PostCardProps {
   post: PostResponse;
   userSub: string;
-  togglePostLike: (postId: number) => void;
-  onDeletedPost: (postId: number) => void;
+  togglePostLike: (postId: string) => void;
+  onDeletedPost: (postId: string) => void;
 }
 
 export default function PostCard({
@@ -44,6 +44,7 @@ export default function PostCard({
   togglePostLike,
   onDeletedPost,
 }: PostCardProps) {
+  console.log(post);
   const contentPreviewImg = post.content.find((item) => item.type === ContentTypes.Img);
   const navigate = useNavigate();
   const { user } = useAuth0();
@@ -57,10 +58,7 @@ export default function PostCard({
     (item) => item.type === ContentTypes.Text,
   );
 
-  const postLastTime = useMemo(
-    () => new Date(post.updatedAt ? post.updatedAt : post.createdAt),
-    [post],
-  );
+  const postLastTime = new Date();
   const isOwner = useMemo(() => userSub === post.user.id, [userSub, post]);
 
   const { mutate: deletePost } = useMutation(

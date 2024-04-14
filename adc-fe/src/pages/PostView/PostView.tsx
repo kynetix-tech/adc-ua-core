@@ -35,12 +35,10 @@ export default function PostView() {
   const { postId } = useParams();
   const navigate = useNavigate();
 
-  const postIdParsed = useMemo(() => parseInt(postId || '0'), [postId]);
-
   const { data: post, isLoading: isLoadingPost } = useQuery(
     [Entity.PostView],
-    () => PostService.getPostById(postIdParsed),
-    { onError: useNotificationOnError(), refetchOnWindowFocus: false },
+    () => PostService.getPostById(postId as string),
+    { onError: useNotificationOnError(), refetchOnWindowFocus: false, enabled: !!postId },
   );
 
   return (
@@ -91,7 +89,7 @@ export default function PostView() {
 
       <Divider />
 
-      {post && <CommentSection postId={postIdParsed} />}
+      {postId && <CommentSection postId={postId} />}
     </PageContainer>
   );
 }

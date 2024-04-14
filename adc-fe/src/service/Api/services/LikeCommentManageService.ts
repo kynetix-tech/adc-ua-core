@@ -86,7 +86,7 @@ export class LikeCommentManageService {
      * @throws ApiError
      */
     public static getNewestComments(
-        postId: number,
+        postId: string,
         limit?: number,
         offset?: number,
     ): CancelablePromise<Array<CommentViewResponse>> {

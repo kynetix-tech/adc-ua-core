@@ -72,30 +72,21 @@ export class PostService {
     }
 
     /**
-     * @param carMakeId
-     * @param carModelId
      * @param limit
      * @param offset
-     * @param searchStr
      * @returns PostResponse
      * @throws ApiError
      */
     public static getNewest(
-        carMakeId?: number,
-        carModelId?: number,
         limit?: number,
         offset?: number,
-        searchStr?: string,
     ): CancelablePromise<Array<PostResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/post/newest',
             query: {
-                'carMakeId': carMakeId,
-                'carModelId': carModelId,
                 'limit': limit,
                 'offset': offset,
-                'searchStr': searchStr,
             },
         });
     }
@@ -106,7 +97,7 @@ export class PostService {
      * @throws ApiError
      */
     public static getPostById(
-        id: number,
+        id: string,
     ): CancelablePromise<PostResponse> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -123,7 +114,7 @@ export class PostService {
      * @throws ApiError
      */
     public static deletePost(
-        id: number,
+        id: string,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',

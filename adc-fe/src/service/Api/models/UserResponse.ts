@@ -4,6 +4,7 @@
 
 export type UserResponse = {
     id: string;
+    auth0Id: string;
     email: string;
     firstName: string;
     lastName: string;

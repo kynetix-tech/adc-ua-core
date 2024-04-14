@@ -34,7 +34,6 @@ export class UserController {
     @Body() body: UserRegisterRequest,
     @Req() { user }: RequestWithAuth,
   ): Promise<UserResponse> {
-    console.log(user);
     const { auth0Id } = user;
     const newUser = await this.userService.upsertUser(body, auth0Id);
 

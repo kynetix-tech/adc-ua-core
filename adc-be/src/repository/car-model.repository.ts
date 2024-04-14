@@ -16,7 +16,6 @@ export class CarModelRepository {
     const carModelDocs = await this.model.find({
       make: makeId,
     });
-    console.log(carModelDocs);
 
     return carModelDocs.map(CarModelRepository.toCarModelModel);
   }

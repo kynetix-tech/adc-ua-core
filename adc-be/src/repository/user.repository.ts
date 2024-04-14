@@ -21,9 +21,7 @@ export class UserRepository {
   }
 
   public async getByAuth0Id(auth0Id: string): Promise<UserModel> {
-    console.log({ auth0Id });
     const userDoc = await this.model.findOne({ auth0Id });
-    console.log(userDoc);
 
     if (userDoc) return UserRepository.toUserModel(userDoc);
   }

@@ -62,12 +62,10 @@ export class PostService {
     userId: string,
   ): Promise<string> {
     try {
-      console.log(post);
       const newPostModel = this.createPostModelFromBody(post, userId);
 
       return await this.postRepository.createPost(newPostModel);
     } catch (e) {
-      console.log(e);
       throw new ValidationFailedError(
         'Validation failed, check if the make, model, and content of the publication are correct',
       );
@@ -90,7 +88,7 @@ export class PostService {
   public async updatePostById(post: PostCreateUpdateRequest, userId: string) {
     const oldPost = await this.getPostById(post.id);
 
-    if (oldPost.user.id !== userId) {
+    if (oldPost.user.auth0Id !== userId) {
       throw new PostPermissionDenied(
         'User has no right to edit a post that is not his own, permission denied',
         HttpStatus.FORBIDDEN,
@@ -146,7 +144,7 @@ export class PostService {
   public async deletePost(postId: string, userId: string): Promise<void> {
     const existingPost = await this.postRepository.getPostById(postId);
 
-    if (existingPost && existingPost.user.id !== userId) {
+    if (existingPost && existingPost.user.auth0Id !== userId) {
       throw new PostPermissionDenied('Post delete permission denied');
     }
 

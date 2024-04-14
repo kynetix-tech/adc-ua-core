@@ -6,6 +6,9 @@ export class UserResponse {
   id: string;
 
   @ApiProperty()
+  auth0Id: string;
+
+  @ApiProperty()
   email: string;
 
   @ApiProperty()

@@ -47,7 +47,6 @@ export class PostRepository {
   }
 
   public async createPost(post: PostCreateUpdateModel): Promise<string> {
-    console.log(post);
     const doc = await this.model.create({
       _id: post.id,
       title: post.title,
@@ -95,7 +94,6 @@ export class PostRepository {
     const postDoc = await this.model
       .findOne({ _id: postId })
       .populate(['carMake', 'carModel', 'user']);
-    console.log({ postId, postDoc });
 
     return PostRepository.toPostModel(postDoc);
   }

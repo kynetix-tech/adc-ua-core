@@ -7,6 +7,7 @@ export class UserFormatter {
   public toUserResponse(user: UserModel): UserResponse {
     return {
       id: user.id,
+      auth0Id: user.auth0Id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,

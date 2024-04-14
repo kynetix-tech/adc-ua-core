@@ -31,12 +31,10 @@ export class LikeCommentManagingService {
     }
 
     try {
-      console.log(userId, newLike.postId);
       return await this.likeRepository.addLike(
         new LikeModel(userId, newLike.postId),
       );
     } catch (error) {
-      console.log(error);
       throw new PostDoesNotExists('Post does not exists');
     }
   }
@@ -56,7 +54,6 @@ export class LikeCommentManagingService {
         new CommentCreateModel(comment.text, comment.postId, userId),
       );
     } catch (e) {
-      console.log(e);
       throw new PostDoesNotExists('Post does not exists');
     }
   }

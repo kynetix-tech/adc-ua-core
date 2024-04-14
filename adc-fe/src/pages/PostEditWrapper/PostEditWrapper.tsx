@@ -9,6 +9,7 @@ import PostCreateEdit from '../PostCreateEdit';
 
 export default function PostEditWrapper() {
   const { postId } = useParams();
+  console.log({ postId });
 
   const { data: post, isLoading: isLoadingPostForEdit } = useQuery(
     [Entity.PostView],
@@ -18,6 +19,7 @@ export default function PostEditWrapper() {
       refetchOnWindowFocus: false,
     },
   );
+  console.log({ post });
 
   return <PostCreateEdit post={post} />;
 }

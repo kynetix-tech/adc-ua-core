@@ -21,11 +21,6 @@ export class LikeRepository {
   }
 
   public async addLike(like: LikeModel): Promise<LikeModel> {
-    console.log({
-      _id: like.id,
-      user: like.userId,
-      post: like.postId,
-    });
     const doc = await this.model.create({
       _id: like.id,
       user: like.userId,

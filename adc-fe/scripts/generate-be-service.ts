@@ -23,7 +23,6 @@ const exists = (path: string): Promise<boolean> => {
   const outputPath = path.join(__dirname, '..', 'src', 'service', serviceName);
 
   try {
-    console.log({ swaggerUrl });
     // const apiDocs = await fetch(swaggerUrl, { method: 'GET' }).then((res) => res.json());
 
     const apiDocs = {
@@ -388,7 +387,7 @@ const exists = (path: string): Promise<boolean> => {
           get: {
             operationId: 'getNewestComments',
             parameters: [
-              { name: 'postId', required: true, in: 'query', schema: { type: 'number' } },
+              { name: 'postId', required: true, in: 'query', schema: { type: 'string' } },
               { name: 'limit', required: false, in: 'query', schema: { type: 'number' } },
               {
                 name: 'offset',
@@ -447,13 +446,22 @@ const exists = (path: string): Promise<boolean> => {
             type: 'object',
             properties: {
               id: { type: 'string' },
+              auth0Id: { type: 'string' },
               email: { type: 'string' },
               firstName: { type: 'string' },
               lastName: { type: 'string' },
               gender: { type: 'string' },
               role: { type: 'string' },
             },
-            required: ['id', 'email', 'firstName', 'lastName', 'gender', 'role'],
+            required: [
+              'id',
+              'auth0Id',
+              'email',
+              'firstName',
+              'lastName',
+              'gender',
+              'role',
+            ],
           },
           CarMakeResponse: {
             type: 'object',
@@ -542,7 +550,7 @@ const exists = (path: string): Promise<boolean> => {
           },
           CommentGetCreateRequest: {
             type: 'object',
-            properties: { text: { type: 'string' }, postId: { type: 'number' } },
+            properties: { text: { type: 'string' }, postId: { type: 'string' } },
             required: ['text', 'postId'],
           },
           CommentCreateResponse: {
@@ -586,7 +594,6 @@ const exists = (path: string): Promise<boolean> => {
       useUnionTypes: true,
     });
   } catch (err) {
-    console.log(err);
     return;
   }
 

@@ -48,7 +48,7 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
   const { user } = useAuth0();
 
   useEffect(() => {
-    if (post && post.user.id === user?.sub) {
+    if (post && post.user.auth0Id === user?.sub) {
       setTitle(post.title);
       setInputMake({ id: post.carMake.id, label: post.carMake.title });
       setInputModel({ id: post.carModel.id, label: post.carModel.title });
@@ -67,7 +67,6 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
     },
   );
 
-  console.log({ inputMake });
   const { data: models, isLoading: isLoadingModels } = useQuery(
     [Entity.CarModel, inputMake],
     () => (inputMake ? CarSpecificationService.getCarModelByMake(inputMake.id) : []),
@@ -114,7 +113,7 @@ export default function PostCreateEdit({ post }: PostCreateEditProps) {
 
   useEffect(validateForm, [title, inputMake, inputModel, carYear, content]);
 
-  return post && post.user.id !== user?.sub ? (
+  return post && post.user.auth0Id !== user?.sub ? (
     <Navigate to={paths.default} />
   ) : (
     <PageContainer>

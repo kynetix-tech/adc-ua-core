@@ -9,16 +9,17 @@ import PostCreateEdit from '../PostCreateEdit';
 
 export default function PostEditWrapper() {
   const { postId } = useParams();
+  console.log({ postId });
 
-  const postIdInt = useMemo(() => parseInt(postId || ''), [postId]);
   const { data: post, isLoading: isLoadingPostForEdit } = useQuery(
     [Entity.PostView],
-    () => (postIdInt ? PostService.getPostById(postIdInt) : undefined),
+    () => (postId ? PostService.getPostById(postId) : undefined),
     {
       onError: useNotificationOnError(),
       refetchOnWindowFocus: false,
     },
   );
+  console.log({ post });
 
   return <PostCreateEdit post={post} />;
 }

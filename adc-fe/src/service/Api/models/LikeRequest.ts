@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type LikeRequest = {
-    postId: number;
+    postId: string;
 };
 

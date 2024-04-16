@@ -35,6 +35,7 @@ import { PostCreateUpdateRequest } from '../dto/request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadFileSchema } from '../common/shemas/shemas';
 import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
+import { UserService } from '../service/user.service';
 
 @ApiTags('Post')
 @UseGuards(AuthGuard('jwt'))
@@ -42,6 +43,7 @@ import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
 @Controller('post')
 export class PostController {
   constructor(
+    private readonly userService: UserService,
     private readonly postService: PostService,
     private readonly postFormatter: PostFormatter,
   ) {}
@@ -73,7 +75,8 @@ export class PostController {
     @Body() body: PostCreateUpdateRequest,
   ): Promise<PostCreateUpdateResponse> {
     const { auth0Id } = user;
-    const newPostId = await this.postService.createNewPost(body, auth0Id);
+    const userModel = await this.userService.getByAuth0Id(auth0Id);
+    const newPostId = await this.postService.createNewPost(body, userModel.id);
 
     return this.postFormatter.toPostCreateUpdateResponse(newPostId);
   }
@@ -98,24 +101,12 @@ export class PostController {
   @HttpCode(HttpStatus.OK)
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'offset', required: false })
-  @ApiQuery({ name: 'carMakeId', required: false })
-  @ApiQuery({ name: 'carModelId', required: false })
-  @ApiQuery({ name: 'searchStr', required: false, type: 'string' })
   @ApiResponse({ status: HttpStatus.OK, type: PostResponse, isArray: true })
   public async getNewest(
-    @Query('searchStr') searchStr = '',
-    @Query('carMakeId') carMakeId: number,
-    @Query('carModelId') carModelId: number,
     @Query('limit') limit: number = DEFAULT_LIMIT,
     @Query('offset') offset: number = DEFAULT_OFFSET,
   ): Promise<PostResponse[]> {
-    const posts = await this.postService.getNewestPostWithLimit(
-      searchStr,
-      carMakeId,
-      carModelId,
-      limit,
-      offset,
-    );
+    const posts = await this.postService.getNewestPostWithLimit(limit, offset);
 
     return this.postFormatter.toPostsResponse(posts);
   }
@@ -123,7 +114,7 @@ export class PostController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, type: PostResponse })
-  public async getPostById(@Param('id') id: number) {
+  public async getPostById(@Param('id') id: string) {
     const post = await this.postService.getPostById(id);
 
     return this.postFormatter.toPostResponse(post);
@@ -147,7 +138,7 @@ export class PostController {
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   public async deletePost(
     @Req() { user }: RequestWithAuth,
-    @Param('id') postId: number,
+    @Param('id') postId: string,
   ) {
     const { auth0Id } = user;
 

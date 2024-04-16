@@ -26,7 +26,7 @@ import {
 } from './CommentSection.style';
 
 export interface CommentSectionProps {
-  postId: number;
+  postId: string;
 }
 
 export default function CommentSection({ postId }: CommentSectionProps) {
@@ -57,7 +57,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   const { mutate: createComment } = useMutation(
     [Entity.Comment],
-    (postId: number) =>
+    (postId: string) =>
       LikeCommentManageService.createComment({
         text,
         postId,

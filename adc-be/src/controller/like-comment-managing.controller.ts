@@ -27,6 +27,7 @@ import { LikeCommentManagingService } from '../service/like-comment-managing.ser
 import { LikeCommentManagingFormatter } from '../formatter/like-comment-managing.formatter';
 import { AuthGuard } from '@nestjs/passport';
 import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
+import { UserService } from '../service/user.service';
 
 @Controller('like-comment-manage')
 @UseGuards(AuthGuard('jwt'))
@@ -36,18 +37,20 @@ export class LikeCommentManagingController {
   constructor(
     public readonly likeCommentManagingService: LikeCommentManagingService,
     public readonly likeCommentManagingFormatter: LikeCommentManagingFormatter,
+    private readonly userService: UserService,
   ) {}
 
   @Post('like')
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({ status: HttpStatus.CREATED, type: LikeResponse })
   public async addLike(
-    @Req() { user }: RequestWithAuth,
+    @Req() { user: userJwtInfo }: RequestWithAuth,
     @Body() body: LikeRequest,
   ): Promise<LikeResponse> {
+    const user = await this.userService.getByAuth0Id(userJwtInfo.auth0Id);
     const likeResponse = await this.likeCommentManagingService.addLike(
       body,
-      user.auth0Id,
+      user.id,
     );
 
     return this.likeCommentManagingFormatter.toLikeResponse(likeResponse);
@@ -57,22 +60,24 @@ export class LikeCommentManagingController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   public async deleteLike(
-    @Req() { user }: RequestWithAuth,
+    @Req() { user: userJwtInfo }: RequestWithAuth,
     @Body() body: LikeRequest,
   ): Promise<void> {
-    return await this.likeCommentManagingService.deleteLike(body, user.auth0Id);
+    const user = await this.userService.getByAuth0Id(userJwtInfo.auth0Id);
+    return await this.likeCommentManagingService.deleteLike(body, user.id);
   }
 
   @Post('comment')
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({ status: HttpStatus.CREATED, type: CommentCreateResponse })
   public async createComment(
-    @Req() { user }: RequestWithAuth,
+    @Req() { user: userJwtInfo }: RequestWithAuth,
     @Body() body: CommentGetCreateRequest,
   ): Promise<CommentCreateResponse> {
+    const user = await this.userService.getByAuth0Id(userJwtInfo.auth0Id);
     const commentId = await this.likeCommentManagingService.createComment(
       body,
-      user.auth0Id,
+      user.id,
     );
 
     return this.likeCommentManagingFormatter.toCommentCreateResponce(commentId);
@@ -82,12 +87,12 @@ export class LikeCommentManagingController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   public async deleteComment(
-    @Req() { user }: RequestWithAuth,
+    @Req() { user: userJwtInfo }: RequestWithAuth,
     @Body() body: CommentDeleteRequest,
   ) {
-    const { auth0Id } = user;
+    const user = await this.userService.getByAuth0Id(userJwtInfo.auth0Id);
 
-    return this.likeCommentManagingService.deleteComment(body, auth0Id);
+    return this.likeCommentManagingService.deleteComment(body, user.id);
   }
 
   @Get('comment/newest')
@@ -100,7 +105,7 @@ export class LikeCommentManagingController {
     isArray: true,
   })
   public async getNewestComments(
-    @Query('postId') postId: number,
+    @Query('postId') postId: string,
     @Query('limit') limit: number = DEFAULT_LIMIT,
     @Query('offset') offset: number = DEFAULT_OFFSET,
   ): Promise<CommentViewResponse[]> {

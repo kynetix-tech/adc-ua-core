@@ -10,6 +10,7 @@ import { CheckSumRepository } from '../repository/check-sum-repository.service';
 import { CheckSumModel } from '../model/checkSumModel';
 import { ConfigService } from '@nestjs/config';
 import { ApplicationError } from '../common/aplication.error';
+import { LikeRepository } from '../repository/like.repository';
 
 @Injectable()
 export class PostService {
@@ -20,6 +21,7 @@ export class PostService {
     private readonly postRepository: PostRepository,
     private readonly checkSumRepository: CheckSumRepository,
     private readonly configService: ConfigService,
+    private readonly likeRepository: LikeRepository,
   ) {
     this.mediaDirPath = this.configService.get<string>('media.storageDir');
     this.saltFileName = this.configService.get<string>('media.fileNameSalt');
@@ -49,25 +51,16 @@ export class PostService {
   }
 
   public async getNewestPostWithLimit(
-    searchStr: string,
-    carMakeId: number,
-    carModelId: number,
     limit: number,
     offset: number,
   ): Promise<PostViewModel[]> {
-    return await this.postRepository.getNewestPosts(
-      searchStr,
-      carMakeId,
-      carModelId,
-      limit,
-      offset,
-    );
+    return await this.postRepository.getNewestPosts(limit, offset);
   }
 
   public async createNewPost(
     post: PostCreateUpdateRequest,
     userId: string,
-  ): Promise<number> {
+  ): Promise<string> {
     try {
       const newPostModel = this.createPostModelFromBody(post, userId);
 
@@ -79,8 +72,9 @@ export class PostService {
     }
   }
 
-  public async getPostById(postId: number) {
+  public async getPostById(postId: string) {
     const post = await this.postRepository.getPostById(postId);
+    post.likes = await this.likeRepository.getLikeByPost(post.id);
 
     if (!post)
       throw new PostNotFoundError(
@@ -94,7 +88,7 @@ export class PostService {
   public async updatePostById(post: PostCreateUpdateRequest, userId: string) {
     const oldPost = await this.getPostById(post.id);
 
-    if (oldPost.user.id !== userId) {
+    if (oldPost.user.auth0Id !== userId) {
       throw new PostPermissionDenied(
         'User has no right to edit a post that is not his own, permission denied',
         HttpStatus.FORBIDDEN,
@@ -147,10 +141,10 @@ export class PostService {
     return fileName;
   }
 
-  public async deletePost(postId: number, userId: string): Promise<void> {
+  public async deletePost(postId: string, userId: string): Promise<void> {
     const existingPost = await this.postRepository.getPostById(postId);
 
-    if (existingPost && existingPost.user.id !== userId) {
+    if (existingPost && existingPost.user.auth0Id !== userId) {
       throw new PostPermissionDenied('Post delete permission denied');
     }
 

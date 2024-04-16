@@ -1,70 +1,55 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager, Repository } from 'typeorm';
-import { LikeEntity } from '../entity/like.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { LikeModel } from '../model/like.model';
+import { Like, LikeDocument } from '../schema/like.schema';
 
 @Injectable()
 export class LikeRepository {
-  private repository: Repository<LikeEntity>;
+  @InjectModel(Like.name) private model: Model<LikeDocument>;
 
-  constructor(private manager: EntityManager) {
-    this.repository = this.manager.getRepository(LikeEntity);
-  }
-
-  public static toLikeModel(likeEntity: LikeEntity): LikeModel {
-    return new LikeModel(likeEntity.userId, likeEntity.postId, likeEntity.id);
+  public static toLikeModel(likeEntity: LikeDocument): LikeModel {
+    return new LikeModel(likeEntity.user, likeEntity.post, likeEntity.id);
   }
 
   public static toLikeModelBySpread(
     userId: string,
-    postId: number,
-    id: number,
+    postId: string,
+    id: string,
   ) {
     return new LikeModel(userId, postId, id);
   }
 
   public async addLike(like: LikeModel): Promise<LikeModel> {
-    const { raw } = await this.repository
-      .createQueryBuilder()
-      .insert()
-      .into(LikeEntity)
-      .values({
-        userId: like.userId,
-        postId: like.postId,
-      })
-      .execute();
+    const doc = await this.model.create({
+      _id: like.id,
+      user: like.userId,
+      post: like.postId,
+    });
 
-    return LikeRepository.toLikeModelBySpread(
-      like.userId,
-      like.postId,
-      raw[0].id,
-    );
+    return LikeRepository.toLikeModelBySpread(doc.user, doc.post, doc._id);
   }
 
   public async deleteLike(like: LikeModel): Promise<void> {
-    const { raw } = await this.repository
-      .createQueryBuilder()
-      .delete()
-      .from(LikeEntity)
-      .where('post_id = :postId', { postId: like.postId })
-      .andWhere('user_id = :userId', { userId: like.userId })
-      .returning('id')
-      .execute();
+    await this.model.deleteOne({ id: like.id });
   }
 
   public async getLikeByUserAndPost(
     userId: string,
-    postId: number,
+    postId: string,
   ): Promise<LikeModel> {
-    const likeEntity = await this.repository
-      .createQueryBuilder()
-      .select()
-      .where('post_id = :postId', { postId: postId })
-      .andWhere('user_id = :userId', { userId: userId })
-      .getOne();
+    const likeDoc = await this.model
+      .findOne({ user: userId, post: postId })
+      .populate(['user', 'post']);
 
-    if (likeEntity) {
-      return LikeRepository.toLikeModel(likeEntity);
+    if (likeDoc) {
+      return LikeRepository.toLikeModel(likeDoc);
     }
+  }
+
+  public async getLikeByPost(postId: string): Promise<Array<LikeModel>> {
+    const likeDocs = await this.model.find({ post: postId });
+
+    return likeDocs.map((likeDoc) => LikeRepository.toLikeModel(likeDoc));
   }
 }

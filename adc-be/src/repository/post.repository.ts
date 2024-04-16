@@ -6,26 +6,27 @@ import { CarMakeRepository } from './car-make.repository';
 import { CarModelRepository } from './car-model.repository';
 import { UserRepository } from './user.repository';
 import { LikeRepository } from './like.repository';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from '../schema/user.schema';
+import { Model } from 'mongoose';
+import { Post, PostDocument } from '../schema/post.schema';
+import { PostModule } from '../module/post.module';
+import { CarMakeDocument } from '../schema/car-make.schema';
+import { CarModelDocument } from '../schema/car-model.schema';
 
 @Injectable()
 export class PostRepository {
-  private repository: Repository<PostEntity>;
+  @InjectModel(Post.name) private model: Model<PostDocument>;
 
-  constructor(private manager: EntityManager) {
-    this.repository = this.manager.getRepository(PostEntity);
-  }
-
-  public static toPostModel(post: PostEntity): PostViewModel {
+  public static toPostModel(post: PostDocument): PostViewModel {
     return new PostViewModel(
       post.title,
       post.content,
       post.carYear,
-      CarMakeRepository.toCarMakeModel(post.carMake),
-      CarModelRepository.toCarModelModel(post.carModel),
-      UserRepository.toUserModel(post.user),
-      post.likes.map(LikeRepository.toLikeModel),
+      CarMakeRepository.toCarMakeModel(post.carMake as CarMakeDocument),
+      CarModelRepository.toCarModelModel(post.carModel as CarModelDocument),
+      UserRepository.toUserModel(post.user as UserDocument),
       post.createdAt,
-      post.updatedAt,
       post.id,
     );
   }
@@ -35,118 +36,69 @@ export class PostRepository {
     limit: number,
     offset: number,
   ): Promise<PostViewModel[]> {
-    const postEntity = await this.repository
-      .createQueryBuilder('post')
-      .offset(offset)
+    const postDocs = await this.model
+      .find({ user: userId })
+      .sort('id')
+      .populate(['carMake', 'carModel', 'user'])
       .limit(limit)
-      .leftJoinAndSelect('post.carModel', 'carModel')
-      .leftJoinAndSelect('post.carMake', 'carMake')
-      .leftJoinAndSelect('post.user', 'user')
-      .leftJoinAndSelect('post.likes', 'likes')
-      .orderBy('post.id', 'DESC')
-      .where('post.user_id = :userId', { userId })
-      .getMany();
+      .skip(offset);
 
-    return postEntity.map(PostRepository.toPostModel);
+    return postDocs.map(PostRepository.toPostModel);
   }
 
-  public async createPost(post: PostCreateUpdateModel): Promise<number> {
-    const { raw } = await this.repository
-      .createQueryBuilder()
-      .insert()
-      .into(PostEntity)
-      .values({
+  public async createPost(post: PostCreateUpdateModel): Promise<string> {
+    const doc = await this.model.create({
+      _id: post.id,
+      title: post.title,
+      content: post.content,
+      carYear: post.carYear,
+      carMake: post.carMakeId,
+      carModel: post.carModelId,
+      user: post.userId,
+    });
+
+    return doc._id;
+  }
+
+  public async updatePost(post: PostCreateUpdateModel): Promise<string> {
+    await this.model.findOneAndUpdate(
+      { _id: post.id },
+      {
         title: post.title,
         content: post.content,
         carYear: post.carYear,
         carMakeId: post.carMakeId,
         carModelId: post.carModelId,
         userId: post.userId,
-      })
-      .execute();
-
-    return raw[0].id;
-  }
-
-  public async updatePost(post: PostCreateUpdateModel): Promise<number> {
-    const { raw } = await this.repository
-      .createQueryBuilder()
-      .update(PostEntity)
-      .set({
-        title: post.title,
-        content: post.content,
-        carYear: post.carYear,
-        carMakeId: post.carMakeId,
-        carModelId: post.carModelId,
-        userId: post.userId,
-        updatedAt: new Date(),
-      })
-      .where('id = :postId', { postId: post.id })
-      .execute();
+      },
+    );
 
     return post.id;
   }
 
   public async getNewestPosts(
-    searchStr: string,
-    carMakeId: number,
-    carModelId: number,
     limit: number,
     offset = 0,
   ): Promise<PostViewModel[]> {
-    let subQuery = this.repository
-      .createQueryBuilder('post')
-      .select('post.id')
-      .orderBy('post.id', 'DESC')
-      .offset(offset)
+    const postDocs = await this.model
+      .find()
+      .sort('id')
+      .populate(['carMake', 'carModel', 'user']) // Error happens here
       .limit(limit)
-      .where(`post.title ILIKE '%' || :searchStr || '%'`, { searchStr });
+      .skip(offset);
 
-    if (carMakeId)
-      subQuery = subQuery.andWhere(`post.car_make_id = :carMakeId`, {
-        carMakeId,
-      });
-
-    if (carModelId)
-      subQuery = subQuery.andWhere(`post.car_model_id = :carModelId`, {
-        carModelId,
-      });
-
-    const postEntity = await this.repository
-      .createQueryBuilder('post')
-      .leftJoinAndSelect('post.carModel', 'carModel')
-      .leftJoinAndSelect('post.carMake', 'carMake')
-      .leftJoinAndSelect('post.user', 'user')
-      .leftJoinAndSelect('post.likes', 'likes')
-      .where(`post.id IN (${subQuery.getQuery()})`)
-      .setParameters(subQuery.getParameters())
-      .orderBy('post.id', 'DESC')
-      .getMany();
-
-    return postEntity.map(PostRepository.toPostModel);
+    return postDocs.map(PostRepository.toPostModel);
   }
 
-  public async getPostById(postId: number): Promise<PostViewModel> {
-    const postEntity = await this.repository
-      .createQueryBuilder('post')
-      .where('post.id = :postId', { postId })
-      .leftJoinAndSelect('post.carModel', 'carModel')
-      .leftJoinAndSelect('post.carMake', 'carMake')
-      .leftJoinAndSelect('post.user', 'user')
-      .leftJoinAndSelect('post.likes', 'likes')
-      .getOne();
+  public async getPostById(postId: string): Promise<PostViewModel> {
+    const postDoc = await this.model
+      .findOne({ _id: postId })
+      .populate(['carMake', 'carModel', 'user']);
 
-    if (postEntity) {
-      return PostRepository.toPostModel(postEntity);
-    }
+    return PostRepository.toPostModel(postDoc);
   }
 
-  public async deletePost(postId: number): Promise<void> {
-    const { raw } = await this.repository
-      .createQueryBuilder()
-      .delete()
-      .from(PostEntity)
-      .where('id = :postId', { postId })
-      .execute();
+  public async deletePost(postId: string): Promise<void> {
+    await this.model.deleteOne({ _id: postId });
   }
 }

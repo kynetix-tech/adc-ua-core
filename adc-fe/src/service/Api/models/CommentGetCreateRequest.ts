@@ -4,6 +4,6 @@
 
 export type CommentGetCreateRequest = {
     text: string;
-    postId: number;
+    postId: string;
 };
 

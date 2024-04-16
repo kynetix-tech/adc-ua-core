@@ -3,6 +3,7 @@ import { join, resolve } from 'path';
 export const configuration = () => ({
   port: 8080,
   host: '127.0.0.1',
+  // TODO: Remove and change to db connection string
   db: {
     type: 'postgres',
     host: process.env.POSTGRES_HOST || '127.0.0.1',

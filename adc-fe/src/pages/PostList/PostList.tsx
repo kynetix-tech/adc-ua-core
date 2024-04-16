@@ -43,14 +43,7 @@ export default function PostList() {
 
   const { data: posts, isLoading: isPostsLoading } = useQuery(
     [Entity.PostView, offset],
-    () =>
-      PostService.getNewest(
-        filterMake?.id,
-        filterModel?.id,
-        POST_LIMIT_PER_PAGE,
-        offset,
-        searchStr,
-      ),
+    () => PostService.getNewest(POST_LIMIT_PER_PAGE, offset),
     {
       onError: useNotificationOnError(),
       onSuccess: (posts) =>
@@ -63,14 +56,7 @@ export default function PostList() {
 
   const { mutate: addFilters } = useMutation(
     [Entity.PostView],
-    () =>
-      PostService.getNewest(
-        filterMake?.id,
-        filterModel?.id,
-        POST_LIMIT_PER_PAGE,
-        0,
-        searchStr,
-      ),
+    () => PostService.getNewest(POST_LIMIT_PER_PAGE, 0),
     {
       onError: useNotificationOnError(),
       onSettled: (posts) => {
@@ -84,13 +70,13 @@ export default function PostList() {
 
   const { mutate: addLike, isLoading: isLoadingLikes } = useMutation(
     [Entity.Like],
-    (postId: number) => LikeCommentManageService.addLike({ postId }),
+    (postId: string) => LikeCommentManageService.addLike({ postId }),
     { onError: useNotificationOnError() },
   );
 
   const { mutate: deleteLike } = useMutation(
     [Entity.Like],
-    (postId: number) => LikeCommentManageService.deleteLike({ postId }),
+    (postId: string) => LikeCommentManageService.deleteLike({ postId }),
     { onError: useNotificationOnError() },
   );
 
@@ -115,7 +101,7 @@ export default function PostList() {
   );
 
   const togglePostLike = useCallback(
-    (postId: number) => {
+    (postId: string) => {
       setCurrentPosts((prevState) => {
         const post = prevState.find((post) => post.id === postId);
         if (post) {
@@ -125,7 +111,7 @@ export default function PostList() {
             post.likes.splice(likeIndex, 1);
           } else {
             addLike(postId);
-            post.likes.push({ id: 0, postId, userId: user?.sub || '' });
+            post.likes.push({ id: '', postId, userId: user?.sub || '' });
           }
         }
         return [...prevState];
@@ -135,7 +121,7 @@ export default function PostList() {
   );
 
   const onDeletedPost = useCallback(
-    (postId: number) => {
+    (postId: string) => {
       setCurrentPosts((prevState) => prevState.filter((item) => item.id !== postId));
     },
     [currentPosts],

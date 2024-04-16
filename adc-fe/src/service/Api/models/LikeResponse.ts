@@ -4,7 +4,7 @@
 
 export type LikeResponse = {
     userId: string;
-    postId: number;
-    id: number;
+    postId: string;
+    id: string;
 };
 

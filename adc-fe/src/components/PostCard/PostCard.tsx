@@ -34,8 +34,8 @@ import {
 export interface PostCardProps {
   post: PostResponse;
   userSub: string;
-  togglePostLike: (postId: number) => void;
-  onDeletedPost: (postId: number) => void;
+  togglePostLike: (postId: string) => void;
+  onDeletedPost: (postId: string) => void;
 }
 
 export default function PostCard({
@@ -57,11 +57,8 @@ export default function PostCard({
     (item) => item.type === ContentTypes.Text,
   );
 
-  const postLastTime = useMemo(
-    () => new Date(post.updatedAt ? post.updatedAt : post.createdAt),
-    [post],
-  );
-  const isOwner = useMemo(() => userSub === post.user.id, [userSub, post]);
+  const postLastTime = new Date();
+  const isOwner = useMemo(() => userSub === post.user.auth0Id, [userSub, post]);
 
   const { mutate: deletePost } = useMutation(
     [Entity.PostView],
@@ -125,6 +122,9 @@ export default function PostCard({
               <IconButton
                 onClick={(event) => {
                   event.stopPropagation();
+                  console.log(
+                    path.join(paths.post.root, paths.post.edit.root, `${post.id}`),
+                  );
                   navigate(
                     path.join(paths.post.root, paths.post.edit.root, `${post.id}`),
                   );

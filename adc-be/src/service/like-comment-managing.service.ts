@@ -54,7 +54,6 @@ export class LikeCommentManagingService {
         new CommentCreateModel(comment.text, comment.postId, userId),
       );
     } catch (e) {
-      console.log(e);
       throw new PostDoesNotExists('Post does not exists');
     }
   }
@@ -75,7 +74,7 @@ export class LikeCommentManagingService {
   }
 
   public async getNewestCommentsWithLimit(
-    postId: number,
+    postId: string,
     limit: number,
     offset: number,
   ) {

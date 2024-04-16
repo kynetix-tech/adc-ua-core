@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import { AppController } from '../controller/app.controller';
 import { AppService } from '../service/app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -19,12 +21,16 @@ import { LikeCommentManagingModule } from './like-comment-managing.module';
       isGlobal: true,
       cache: true,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) =>
-        configService.get<DatabaseConfig>('db'),
-    }),
+    // TODO: Remove
+    // TypeOrmModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (configService: ConfigService) =>
+    //     configService.get<DatabaseConfig>('db'),
+    // }),
+    MongooseModule.forRoot(
+      'mongodb://localhost:27017,127.0.0.1:27018/adc?replicaSet=rs0',
+    ),
     AuthModule,
     UserModule,
     CarSpecificationModule,

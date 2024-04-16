@@ -17,7 +17,6 @@ export type PostResponse = {
     user: UserResponse;
     likes: Array<LikeResponse>;
     createdAt: string;
-    updatedAt: string;
-    id: number;
+    id: string;
 };
 

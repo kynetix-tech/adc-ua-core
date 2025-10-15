@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { PostEntity } from './post.entity';
 import { LikeEntity } from './like.entity';
+import { PostEntity } from './post.entity';
 
 export enum Role {
   User = 'User',

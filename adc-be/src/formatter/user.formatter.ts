@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UserModel } from '../model/user.model';
 import { UserResponse } from '../dto/responce.dto';
+import { UserModel } from '../model/user.model';
 
 @Injectable()
 export class UserFormatter {

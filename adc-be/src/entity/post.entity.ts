@@ -2,16 +2,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  JoinColumn,
 } from 'typeorm';
-import { UserEntity } from './user.entity';
-import { CommentEntity } from './comment.entity';
 import { CarMakeEntity } from './car-make.entity';
 import { CarModelEntity } from './car-model.entity';
+import { CommentEntity } from './comment.entity';
 import { LikeEntity } from './like.entity';
+import { UserEntity } from './user.entity';
 
 export interface ContentItem {
   type: 'text' | 'img';

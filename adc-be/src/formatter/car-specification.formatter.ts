@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CarMakeModel } from '../model/car-make.model';
 import { CarMakeResponse, CarModelResponse } from '../dto/responce.dto';
+import { CarMakeModel } from '../model/car-make.model';
 import { CarModelModel } from '../model/car-model.model';
 
 @Injectable()

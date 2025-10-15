@@ -1,7 +1,7 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { AppService } from '../service/app.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AppService } from '../service/app.service';
 import { RequestWithAuth } from '../types/interfaces';
 
 @Controller()

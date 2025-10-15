@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '../auth/auth.module';
+import { configuration } from '../config/configuration';
+import { DatabaseConfig } from '../config/interface';
 import { AppController } from '../controller/app.controller';
 import { AppService } from '../service/app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { configuration } from '../config/configuration';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DatabaseConfig } from '../config/interface';
-import { AuthModule } from '../auth/auth.module';
-import { UserModule } from './user.module';
 import { CarSpecificationModule } from './car-specification.module';
+import { LikeCommentManagingModule } from './like-comment-managing.module';
 import { PostModule } from './post.module';
 import { PublicStaticModule } from './public-static.module';
-import { LikeCommentManagingModule } from './like-comment-managing.module';
+import { UserModule } from './user.module';
 
 @Module({
   imports: [

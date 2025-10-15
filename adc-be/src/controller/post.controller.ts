@@ -14,6 +14,8 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -22,19 +24,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { PostService } from '../service/post.service';
-import { PostFormatter } from '../formatter/post.formatter';
+import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
+import { UploadFileSchema } from '../common/shemas/shemas';
+import { PostCreateUpdateRequest } from '../dto/request.dto';
 import {
   ImageUploadResponse,
   PostCreateUpdateResponse,
   PostResponse,
 } from '../dto/responce.dto';
+import { PostFormatter } from '../formatter/post.formatter';
+import { PostService } from '../service/post.service';
 import { RequestWithAuth } from '../types/interfaces';
-import { PostCreateUpdateRequest } from '../dto/request.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadFileSchema } from '../common/shemas/shemas';
-import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
 
 @ApiTags('Post')
 @UseGuards(AuthGuard('jwt'))

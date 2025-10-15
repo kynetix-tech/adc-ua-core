@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entity/user.entity';
 import { ContentItem } from './responce.dto';
-import { isNumber } from '@nestjs/common/utils/shared.utils';
 
 export class UserRegisterRequest {
   @ApiProperty()

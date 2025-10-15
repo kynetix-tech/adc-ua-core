@@ -4,8 +4,8 @@ import { PostEntity } from '../entity/post.entity';
 import { PostCreateUpdateModel, PostViewModel } from '../model/post.model';
 import { CarMakeRepository } from './car-make.repository';
 import { CarModelRepository } from './car-model.repository';
-import { UserRepository } from './user.repository';
 import { LikeRepository } from './like.repository';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class PostRepository {

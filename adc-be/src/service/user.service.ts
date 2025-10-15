@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { UserRepository } from '../repository/user.repository';
-import { UserModel } from '../model/user.model';
 import { ApplicationError } from '../common/aplication.error';
 import { UserRegisterRequest } from '../dto/request.dto';
+import { UserModel } from '../model/user.model';
+import { UserRepository } from '../repository/user.repository';
 
 @Injectable()
 export class UserService {
@@ -44,3 +44,4 @@ export class UserService {
 }
 
 export class UserNotExistsError extends ApplicationError {}
+export class PostPermissionDenied extends ApplicationError {}

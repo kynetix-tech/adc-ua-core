@@ -5,28 +5,27 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
   Query,
   Req,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
+import {
+  CommentDeleteRequest,
+  CommentGetCreateRequest,
+  LikeRequest,
+} from '../dto/request.dto';
 import {
   CommentCreateResponse,
   CommentViewResponse,
   LikeResponse,
 } from '../dto/responce.dto';
-import { RequestWithAuth } from '../types/interfaces';
-import {
-  CommentGetCreateRequest,
-  CommentDeleteRequest,
-  LikeRequest,
-} from '../dto/request.dto';
-import { LikeCommentManagingService } from '../service/like-comment-managing.service';
 import { LikeCommentManagingFormatter } from '../formatter/like-comment-managing.formatter';
-import { AuthGuard } from '@nestjs/passport';
-import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '../common/const';
+import { LikeCommentManagingService } from '../service/like-comment-managing.service';
+import { RequestWithAuth } from '../types/interfaces';
 
 @Controller('like-comment-manage')
 @UseGuards(AuthGuard('jwt'))

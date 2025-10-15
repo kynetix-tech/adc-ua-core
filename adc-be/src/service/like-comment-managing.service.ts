@@ -1,14 +1,14 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { LikeRepository } from '../repository/like.repository';
+import { ApplicationError } from '../common/aplication.error';
 import {
-  CommentGetCreateRequest,
   CommentDeleteRequest,
+  CommentGetCreateRequest,
   LikeRequest,
 } from '../dto/request.dto';
-import { LikeModel } from '../model/like.model';
-import { ApplicationError } from '../common/aplication.error';
-import { CommentRepository } from '../repository/comment.repository';
 import { CommentCreateModel } from '../model/comment.model';
+import { LikeModel } from '../model/like.model';
+import { CommentRepository } from '../repository/comment.repository';
+import { LikeRepository } from '../repository/like.repository';
 
 @Injectable()
 export class LikeCommentManagingService {

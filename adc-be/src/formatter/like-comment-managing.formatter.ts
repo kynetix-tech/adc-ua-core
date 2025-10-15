@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { LikeModel } from '../model/like.model';
 import {
   CommentCreateResponse,
   CommentViewResponse,
   LikeResponse,
 } from '../dto/responce.dto';
-import { UserFormatter } from './user.formatter';
 import { CommentViewModel } from '../model/comment.model';
+import { LikeModel } from '../model/like.model';
+import { UserFormatter } from './user.formatter';
 
 @Injectable()
 export class LikeCommentManagingFormatter {
